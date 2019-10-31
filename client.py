@@ -8,17 +8,44 @@ model = Module()
 
 train(model,tds,vds,msMg) # NOTE 是一个解
 
+from modelconfig import modelConfig 
+
+
 
 def train(model,trainDataSet,validDataSet,msMg):
 
-    # trainName
+    # 创建 trainName
+    # startTime
 
-    # 固定消息
-    # 数据集信息
-    # 模型信息
+    trainStaticInfoDict = {
+        "trainName":trainName,
+        "startTime":startTime,
+        "totalStep":??,
+        "allEpoch":??
+        "allBatch":??
+    }
+
+    msMg.push(trainStaticInfoDict,"trainStaticInfoDict")
+
+
+    #----固定消息--------------------------------------------
+
+    modelConfigStaticInfoDict = modelConfig.to_dict()
+    msMg.push(modelConfigStaticInfoDict,"modelConfigStaticInfoDict")
+
+    tdsStaticInfoDict,_ = trainDataSet.describe()
+    vdsStaticInfoDict,_ = validDataSet.describe()
+
+    msMg.push(tdsStaticInfoDict,"tdsStaticInfoDict")
+    msMg.push(vdsStaticInfoDict,"vdsStaticInfoDict")
+
+    
+
+    # 数据集信息1
+    # 模型信息1
     # 训练信息
     # 消息队列信息
-    # 机器信息
+    # 机器信息1
 
     for epoch_i in range(epochs):
         epochState = msMg.pull(topic="epochState") # --> int
@@ -111,15 +138,15 @@ def train(model,trainDataSet,validDataSet,msMg):
             # 模型保存 OK
             if step % modelConfig.modelStepSave == 0:
                 msMg.push(sess,topic="sess")
-                saver.save(
-                    sess, os.path.join(modelConfig.checkpointPath,modelConfig.checkpointModelName), 
-                    global_step=step
-                )
+                # saver.save(
+                #     sess, os.path.join(modelConfig.checkpointPath,modelConfig.checkpointModelName), 
+                #     global_step=step
+                # )
 
             # 模型可视化 OK - tensorboard
             if step % modelConfig.summaryStepSave == 0:
                 msMg.push(summaryStr,topic="summaryStr")
-                summaryWriter.add_summary(summaryStr, global_step=step) # buffer--as str
+                # summaryWriter.add_summary(summaryStr, global_step=step) # buffer--as str
 
 
 
@@ -157,33 +184,17 @@ def train(model,trainDataSet,validDataSet,msMg):
                         # break
                     
                     #----------------------------------------------------------------
-                    # 记录结果
-
-                    # 1
-                    print(
-                        'Epoch {:>3}/{} Batch {:>4} - Training Loss: {:>6.3f}  - Validation loss: {:>6.3f}  - Training Accuracy: {:>6.3f}  - Validation Accuracy: {:>6.3f} '
-                        .format(epoch_i, 
-                                modelConfig.epochs, 
-                                batch_i, 
-                                loss,
-                                valid_loss,
-                                accuracy_all,
-                                valid_accuracy_all)
-                    )
+                    trainIterInfoDict = {
+                        "step":step,
+                        "epoch":epoch_i,
+                        "batch":batch_i,
+                        "loss":loss,
+                        "acc":accuracy_all,
+                        "loss_val":valid_loss,
+                        "acc_val":valid_accuracy_all
+                    }
 
 
-                    # 2
-                    myHistory.log(step=step, loss_val=valid_loss, accuracy_val_=valid_accuracy_all) # NOTE 这个地方是用字典存储的
-                    # myHistory.progress()
-
-                    with myCanvas:
-                        myCanvas.draw_plot([myHistory["loss"], myHistory["loss_val"]],ylabel="loss")
-                        myCanvas.draw_plot([myHistory["accuracy"], myHistory["accuracy_val"]],ylabel="accuracy")
-
-                    # OK save figure
-                    myCanvas.save(os.path.join(modelConfig.historyPath, modelConfig.canvasFileName))
-                    # OK save history
-                    myHistory.save(os.path.join(modelConfig.historyPath, modelConfig.historyFileName))
 
             step += 1
             batch_i += 1
