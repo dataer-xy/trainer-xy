@@ -1,6 +1,7 @@
-
+"""客户流程"""
 from .modelconfig import modelConfig 
 
+from .msmg import MessageManager
 msMg = MessageManager()
 
 from .buildds import build_dataset
@@ -44,7 +45,7 @@ def train(lineModel,trainDataSet,validDataSet,msMg):
 
     nBatch = _get_maxIter(trainDataSet)
 
-    totalStep = epochs * epochs
+    totalStep = epochs * nBatch
 
     #
     tf.summary.scalar('loss_op', lineModel.loss_op) # histogram、image...
@@ -90,7 +91,6 @@ def train(lineModel,trainDataSet,validDataSet,msMg):
         init = tf.global_variables_initializer() # 全局变量初始化
         sess.run(init)
 
-        msMg.push(sess.graph,"graph")
         
         # --------------------------------------------------
         for epoch_i in range(epochs):
@@ -176,7 +176,11 @@ def train(lineModel,trainDataSet,validDataSet,msMg):
 
                 # 模型保存 OK
                 if step % modelConfig.modelStepSave == 0:
-                    msMg.push(sess,topic="sess")
+                    sessInfo = {
+                        "step":step,
+                        "sess":sess
+                    }
+                    msMg.push(sessInfo,topic="sessInfo")
                     # saver.save(
                     #     sess, os.path.join(modelConfig.checkpointPath,modelConfig.checkpointModelName), 
                     #     global_step=step
@@ -184,7 +188,14 @@ def train(lineModel,trainDataSet,validDataSet,msMg):
 
                 # 模型可视化 OK - tensorboard
                 if step % modelConfig.summaryStepSave == 0:
-                    msMg.push(summaryStr,topic="summaryStr")
+                    summaryInfo = {
+                        "step":step,
+                        "summaryStr":summaryStr,
+                        "runMetadata":runMetadata,
+                        "graph":sess.graph
+                    }
+
+                    msMg.push(summaryInfo,topic="summaryInfo")
                     # summaryWriter.add_summary(summaryStr, global_step=step) # buffer--as str
 
 
