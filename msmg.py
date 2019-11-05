@@ -36,6 +36,12 @@ class MessageManager(object):
     def pull(self,topic):
         pass
 
+    def show_all_topic(self):
+        pass
+
+    def get_message(self):
+        pass
+
 
 
 

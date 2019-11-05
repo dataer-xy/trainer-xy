@@ -11,8 +11,6 @@ from image2latex.models.myim2latex.selfutils.modelplot import MyCanvas # 自制�
 
 def train_im2latexModel(im2latexModel,trainDataSet,validDataSet=None):
 
-    # 2、保存模型 OK
-    saver = tf.train.Saver(max_to_keep=4) 
 
     # 3、模型可视化 OK summary summaryWriter tensorboard
     # TensorBoard 默认是不会记录每个节点的用时、耗费的内存大小等这些信息的
@@ -24,8 +22,6 @@ def train_im2latexModel(im2latexModel,trainDataSet,validDataSet=None):
     tf.summary.scalar("count_num_all_op", im2latexModel.count_num_all_op)
     tf.summary.scalar("accuracy_all_op", im2latexModel.accuracy_all_op)
 
-    merged_summary_op = tf.summary.merge_all() # op graph
-    summaryWriter = tf.summary.FileWriter(modelConfig.tensorboardLogPath) # 实例化一个FileWriter的类对象，并将当前TensoirFlow的计算图写入【日志文件】
 
     # 4、模型训练的可视化 hiddenlayer
     myHistory = hl.History() # summary、progress、save、load、steps、get_total_time、formatted_steps、
