@@ -2,6 +2,7 @@
 """消息管理器"""
 
 
+
 class MqConn(object):
     def band(self,projectName):
         pass
