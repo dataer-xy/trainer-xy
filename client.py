@@ -95,7 +95,7 @@ def train(lineModel,trainDataSet,validDataSet,msMg):
     # 机器信息
 
     # Popen对象创建后，主程序不会自动等待子进程完成
-    # 什么时间停止子进程？异常时需要主动杀死，因为不会自动关闭
+    # 什么时间停止子进程？异常时需要主动杀死，因为不会自动关闭 # TODO
     cmd = "python sysinfo.py {trainName}".format(trainName=trainName)
     sysInfoSubprocess = subprocess.Popen(cmd, stdout=subprocess.PIPE,stderr=subprocess.PIPE,shell=True)
 
