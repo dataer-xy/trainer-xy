@@ -50,10 +50,7 @@ def request_dataset_static_info(request):
             NOTE: 所有参数都要在request.json中
             {
                 "mainData":{
-                    "gpby":["area","papertype"], #  分组字段
-                    "searchgroup":{"area":"武汉", "papertype":"高考"}, # 查询的组
-                    "isSendCorrcoef":1,
-                    "isSendFig":1
+
                 }
             }
 
@@ -62,12 +59,7 @@ def request_dataset_static_info(request):
                 "isSuccessful":1, 
                 "errMsg":[],
                 "data":{
-                    "knowCount":{"a":1,"b":2}, # 知识点词频
-                    "knowTfidf":{"a":12.2,"b":12},# tfidf字典
-                    "corrcoef":{'row1': {'col1': 1, 'col2': 0.5}, 'row2': {'col1': 2, 'col2': 0.75}}, # 相关矩阵
-                    "corrfig":"safdafdfdfffff", # 相关系数矩阵图片位置
-                    "barfig":"safdafdfdfffff", # bar 图片位置
-                    "wcfig":"safdafdfdfffff" # wc 图片位置
+
                 }
             }
     """

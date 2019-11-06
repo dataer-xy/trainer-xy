@@ -19,6 +19,8 @@ train(lineModel,trainDataSet,validDataSet,msMg) # NOTE 是一个解
 
 import time
 import tensorflow as tf
+import subprocess
+
 
 def _get_maxIter(dataset):
     """ 获取最大迭代次数
@@ -35,14 +37,16 @@ def _get_maxIter(dataset):
 
 
 def train(lineModel,trainDataSet,validDataSet,msMg):
-    epochs = 100
-    step = 0
-    
+
+
     # 创建时间
     startTime = time.time()
     # 创建 trainName
     trainName = str(startTime)
 
+    # 
+    epochs = 100
+    step = 0
     nBatch = _get_maxIter(trainDataSet)
 
     totalStep = epochs * nBatch
@@ -52,8 +56,16 @@ def train(lineModel,trainDataSet,validDataSet,msMg):
     tf.summary.scalar("accuracy_op", lineModel.accuracy_op)
     merged_summary_op = tf.summary.merge_all()
 
+    # 绑定
+    msMg.band_projectName(trainName)
 
-    #----固定消息--------------------------------------------
+    #----------------------------------------------------------------------------
+    # 固定消息：
+    # 数据集信息1 2
+    # 模型信息1
+    # 训练信息1 2 
+    # 消息队列信息1
+    # 机器信息1 2
     
     # 
     trainStaticInfoDict = {
@@ -66,7 +78,7 @@ def train(lineModel,trainDataSet,validDataSet,msMg):
 
     msMg.push(trainStaticInfoDict,"trainStaticInfoDict")
 
-    modelConfigStaticInfoDict = modelConfig.to_dict()
+    modelConfigStaticInfoDict = modelConfig.to_dict() # TODO
     msMg.push(modelConfigStaticInfoDict,"modelConfigStaticInfoDict")
 
     tdsStaticInfoDict,_ = trainDataSet.describe()
@@ -76,11 +88,19 @@ def train(lineModel,trainDataSet,validDataSet,msMg):
     msMg.push(vdsStaticInfoDict,"vdsStaticInfoDict")
 
 
-    # 数据集信息1
-    # 模型信息1
-    # 训练信息1
-    # 消息队列信息
-    # 机器信息1
+    msmgInfoDict = msMg.describe()
+    msMg.push(msmgInfoDict,"msmgInfoDict")
+
+    #----------------------------------------------------------------------------
+    # 机器信息
+
+    # Popen对象创建后，主程序不会自动等待子进程完成
+    # 什么时间停止子进程？异常时需要主动杀死，因为不会自动关闭
+    cmd = "python sysinfo.py {trainName}".format(trainName=trainName)
+    sysInfoSubprocess = subprocess.Popen(cmd, stdout=subprocess.PIPE,stderr=subprocess.PIPE,shell=True)
+
+
+    #----------------------------------------------------------------------------
 
     tfconfig = tf.ConfigProto(allow_soft_placement=True) # 需要在没有GPU的情况下，转为CPU
     tfconfig.gpu_options.allow_growth = True # 动态申请显存
@@ -92,8 +112,9 @@ def train(lineModel,trainDataSet,validDataSet,msMg):
         sess.run(init)
 
         
-        # --------------------------------------------------
+        #----------------------------------------------------------------------------
         for epoch_i in range(epochs):
+            #
             epochState = msMg.pull(topic="epochState") # --> int
             if epochState == 2:
                 # pause 暂停，只能继续消费队列，找到继续/终止命令
@@ -112,7 +133,8 @@ def train(lineModel,trainDataSet,validDataSet,msMg):
             trainDataSet.shuffle_idxs() # 每迭代一次都要 shuffle idxs
             
             for outputDict in trainDataSet:
-
+                
+                # 
                 batchState = msMg.pull(topic="batchState") # --> int
                 if batchState == 4:
                     # pause 暂停，只能继续消费队列，找到继续/终止命令
@@ -128,6 +150,7 @@ def train(lineModel,trainDataSet,validDataSet,msMg):
                     pass
                 
                 #----------------------------------------------------------------------------
+                # 训练
                 # NOTE 尽量保持同名
                 
                 feed_dict = {
@@ -150,16 +173,17 @@ def train(lineModel,trainDataSet,validDataSet,msMg):
                         options=runOptions,
                         run_metadata=runMetadata
                     )
-                    # summaryWriter.add_run_metadata(runMetadata, 'step{}'.format(step), global_step=step)
 
+                #----------------------------------------------------------------------------
                 # 数据集信息
+
                 dsIterInfo = outputDict["_info"]
                 msMg.push(dsIterInfo,topic="dsIterInfo")
 
                 #----------------------------------------------------------------------------
                 # 训练信息
 
-                # 计算平均loss并显示出来
+                # loss 等
                 if step % modelConfig.printStep == 0:
                     trainIterInfoDict = {
                         "step":step,
@@ -181,10 +205,7 @@ def train(lineModel,trainDataSet,validDataSet,msMg):
                         "sess":sess
                     }
                     msMg.push(sessInfo,topic="sessInfo")
-                    # saver.save(
-                    #     sess, os.path.join(modelConfig.checkpointPath,modelConfig.checkpointModelName), 
-                    #     global_step=step
-                    # )
+
 
                 # 模型可视化 OK - tensorboard
                 if step % modelConfig.summaryStepSave == 0:
@@ -196,17 +217,17 @@ def train(lineModel,trainDataSet,validDataSet,msMg):
                     }
 
                     msMg.push(summaryInfo,topic="summaryInfo")
-                    # summaryWriter.add_summary(summaryStr, global_step=step) # buffer--as str
 
 
 
                 #----------------------------------------------------------------------------
                 # 验证集
+
                 if validDataSet is not None:
 
                     if step % int(modelConfig.nSteps / modelConfig.validFrequency) == 0:
                         
-                        #----------------------------------------------------------------
+                        #----------------------------------------------------------------------------
                         # 计算 validation loss
 
                         for outputDict in validDataSet:
@@ -222,7 +243,8 @@ def train(lineModel,trainDataSet,validDataSet,msMg):
                             
                             # break
                         
-                        #----------------------------------------------------------------
+                        #----------------------------------------------------------------------------
+                        # 信息
                         trainIterInfoDict = {
                             "step":step,
                             "epoch":epoch_i,

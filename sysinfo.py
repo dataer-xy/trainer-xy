@@ -8,8 +8,7 @@
 """
 
 
-
-import pynvml 
+import pynvml # pip install nvidia-ml-py3
 import psutil 
 import time 
 import argparse
@@ -18,7 +17,7 @@ from .msmg import MessageManager
 
 def get_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument("trainName", required=True, type=str,help="训练程序的名称或id")
+    parser.add_argument("trainName", required=True, type=str, help="训练程序的名称或id")
     args = parser.parse_args()
     return args
 
@@ -27,14 +26,17 @@ def main(trainName):
     """"""
 
     msMg = MessageManager()
-    msMg.trainName = trainName
+    msMg.bind_projectName(trainName)
 
     # 静态量
 
     cpuCount = psutil.cpu_count()
     memoryTotal = psutil.virtual_memory().total/1024/1024/1024 # G
-    handle = pynvml.nvmlDerviceGethandleByIndex(1)
+
+    pynvml.nvmlInit()
+    handle = pynvml.nvmlDeviceGetHandleByIndex(1) # 0 是？ 1 是 1080Ti
     gpuMemoryTotal = pynvml.nvmlDeviceGetMemoryInfo(handle).total/1024/1024/1024 # G
+    pynvml.nvmlShutdown()
 
     sysStaticInfo = {
         "cpuCount":cpuCount,
@@ -47,12 +49,31 @@ def main(trainName):
 
     # 动态量
     sleepTime = 1
-    oldNetRecv = 0
-    oldNetSend = 0
-    oldDiskRecv = 0
-    oldDiskSend = 0
 
+    isStartFlag = True
     while True:
+        
+        # 
+        net = psutil.net_io_counters()
+
+        netRecv = net[1]
+        netSent = net[0]
+
+        # 
+        disk = psutil.disk_io_counters()
+
+        diskRecv = disk[1]
+        diskSent = disk[0]
+
+        if isStartFlag:
+
+            oldNetRecv = netRecv
+            oldNetSend = netSent
+            oldDiskRecv = diskRecv
+            oldDiskSend = diskSent
+            time.sleep(sleepTime)
+            isStartFlag = False
+            continue
 
         #
         cpuPercent = psutil.cpu_percent()
@@ -62,19 +83,9 @@ def main(trainName):
         memoryPercent = memory.used / memory.total
 
         # 
-        net = psutil.net_io_counters()
-
-        netRecv = net[1]
-        netSent = net[0]
 
         netRecvPercent = (netRecv - oldNetRecv) / 1024 # kb/s 
         netSendPercent = (netSent - oldNetSend) / 1024 # kb/s 
-
-        # 
-        disk = psutil.disk_io_counters()
-
-        diskRecv = disk[1]
-        diskSent = disk[0]
 
         diskRecvPercent = (diskRecv - oldDiskRecv) / 1024 # kb/s 
         diskSendPercent = (diskSent - oldDiskSend) / 1024 # kb/s 
