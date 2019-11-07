@@ -1,0 +1,5 @@
+Goin' Fast @ http://127.0.0.1:8075
+Sanic tried to use loop.add_signal_handler but it is not implemented on this platform.
+Sanic tried to use loop.add_signal_handler but it is not implemented on this platform.
+Starting worker [39312]
+

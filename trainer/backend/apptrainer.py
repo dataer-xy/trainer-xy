@@ -9,8 +9,8 @@ from sanic import Blueprint
 
 
 from ..config.globalconfig import BASE_DIR
-from ..config.globalConfig import LOG_DIR
-from ..config import globalConfig
+from ..config.globalconfig import LOG_DIR
+from ..config import globalconfig
 
 sys.path.append(BASE_DIR) # 添加路径要在引用之前
 
@@ -99,7 +99,7 @@ app.blueprint(bpApi)
 
 
 # config OK
-app.config.from_object(globalConfig) # Objects are usually either modules or classes -- 可以在后面的文件中，通过request.app.config[key] 来引用配置
+app.config.from_object(globalconfig) # Objects are usually either modules or classes -- 可以在后面的文件中，通过request.app.config[key] 来引用配置
 
 # TODO: 虚拟主机
 

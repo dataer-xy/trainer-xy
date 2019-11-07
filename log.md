@@ -11,6 +11,7 @@
 * 消息结构整理好 OK
 * sysinfo OK
 * trainer 调用 sysinfo 子进程
+* sess summary 还有些问题
 
 
 
@@ -21,11 +22,14 @@
 
 * 所有trainer 的信息 OK
 * 服务配置好 OK
-* 测试 request
+* 测试 request OK
 
 * 后端的初始化是发送一个 index.html (由前端提供)
 
 
 # 前端
+* 创建项目 OK
+* 设计结构
+* 写程序
 
 

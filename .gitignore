@@ -2,3 +2,5 @@ test
 temp
 .vscode
 *.db
+
+# trainer/frontface
