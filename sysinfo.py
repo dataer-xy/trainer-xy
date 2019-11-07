@@ -22,11 +22,16 @@ def get_args():
     return args
 
 
+def link_msmg(trainName):
+    msMg = MessageManager()
+    msMg.bind_projectName(trainName)
+    return msMg
+
+
 def main(trainName):
     """"""
 
-    msMg = MessageManager()
-    msMg.bind_projectName(trainName)
+    msMg = link_msmg(trainName)
 
     # 静态量
 
@@ -38,17 +43,20 @@ def main(trainName):
     gpuMemoryTotal = pynvml.nvmlDeviceGetMemoryInfo(handle).total/1024/1024/1024 # G
     pynvml.nvmlShutdown()
 
-    sysStaticInfo = {
+    sleepTime = 1
+
+    sysStaticInfoDict = {
         "cpuCount":cpuCount,
         "memoryTotal":memoryTotal,
-        "gpuMemoryTotal":gpuMemoryTotal
+        "gpuMemoryTotal":gpuMemoryTotal,
+        "sleepTime":sleepTime
     }
 
-    msMg.push(sysStaticInfo,topic="sysStaticInfo")
+    msMg.push(sysStaticInfoDict,topic="sysStaticInfoDict")
 
 
     # 动态量
-    sleepTime = 1
+    
 
     isStartFlag = True
     while True:
@@ -62,15 +70,15 @@ def main(trainName):
         # 
         disk = psutil.disk_io_counters()
 
-        diskRecv = disk[1]
-        diskSent = disk[0]
+        diskWrite = disk[1]
+        diskRead = disk[0]
 
         if isStartFlag:
 
             oldNetRecv = netRecv
             oldNetSend = netSent
-            oldDiskRecv = diskRecv
-            oldDiskSend = diskSent
+            oldDiskWrite = diskWrite
+            oldDiskRead = diskRead
             time.sleep(sleepTime)
             isStartFlag = False
             continue
@@ -80,34 +88,34 @@ def main(trainName):
 
         #
         memory = psutil.virtual_memory()
-        memoryPercent = memory.used / memory.total
+        memoryPercent = memory.percent
 
         # 
 
-        netRecvPercent = (netRecv - oldNetRecv) / 1024 # kb/s 
-        netSendPercent = (netSent - oldNetSend) / 1024 # kb/s 
+        netRecvPercent = (netRecv - oldNetRecv) / sleepTime / 1024 # kb/s 
+        netSendPercent = (netSent - oldNetSend) / sleepTime / 1024 # kb/s 
 
-        diskRecvPercent = (diskRecv - oldDiskRecv) / 1024 # kb/s 
-        diskSendPercent = (diskSent - oldDiskSend) / 1024 # kb/s 
-
+        diskWritePercent = (diskWrite - oldDiskWrite) / sleepTime / 1024 # kb/s 
+        diskReadPercent = (diskRead - oldDiskRead) / sleepTime / 1024 # kb/s 
+        
         # 
-        sysInfoDict = {
+        sysIterInfoDict = {
             "cpuPercent":cpuPercent,
             "memoryPercent":memoryPercent,
             "netRecvPercent":netRecvPercent,
             "netSendPercent":netSendPercent,
-            "diskRecvPercent":diskRecvPercent,
-            "diskSendPercent":diskSendPercent
+            "diskWritePercent":diskWritePercent,
+            "diskReadPercent":diskReadPercent
         }
 
-        msMg.push(sysInfoDict,topic="sysInfoDict")
+        msMg.push(sysIterInfoDict,topic="sysIterInfoDict")
 
         time.sleep(sleepTime)
 
         oldNetRecv = netRecv
         oldNetSend = netSent
-        oldDiskRecv = diskRecv
-        oldDiskSend = diskSent
+        oldDiskWrite = diskWrite
+        oldDiskRead = diskRead
 
 
 

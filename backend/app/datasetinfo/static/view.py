@@ -1,5 +1,6 @@
 """
-
+数据集静态信息
+--------------------------------
 路由
 请求
 请求参数
@@ -26,9 +27,9 @@ from sanic import response
 
 from .model import interface_dataset_static_info
 
-dsStaticInfo = Blueprint("dsStaticInfo",url_prefix="/dsStaticInfo")
+bpDsStaticInfo = Blueprint("bpDsStaticInfo",url_prefix="/bpDsStaticInfo")
 
-@dsStaticInfo.route("/dataset-static-info", methods=['GET','POST']) # @cross_origin(app)
+@bpDsStaticInfo.route("/request_dataset_static_info", methods=['GET','POST']) # @cross_origin(app)
 def request_dataset_static_info(request):
     """ 查找分组，不带时间
 
@@ -40,7 +41,6 @@ def request_dataset_static_info(request):
     请求：
 
     响应：
-
 
     EXAMPLE:
         URL (函数)
@@ -121,40 +121,21 @@ def request_dataset_static_info(request):
 
     mainData = messageJson["mainData"] # --> dict
 
+    trainName = mainData["trainName"]
     isGetAll= mainData["isGetAll"]
 
-    tdsStaticInfoDict = interface_dataset_static_info(isGetAll)
+    dsStaticInfoDict = interface_dataset_static_info(trainName,isGetAll)
 
     responseData = {
-        "mainData":tdsStaticInfoDict
+        "mainData":dsStaticInfoDict
     }
 
-    responseJson = {"isSuccessful":1, "errMsg":[],"data":responseData}
+    responseJson = {
+        "isSuccessful":1, 
+        "errMsg":[],
+        "data":responseData
+    }
 
     return response.json(body=responseJson)
-
-
-
-
-@bpNoTime.route("/request_test",methods=["GET","POST"])
-def request_test(request):
-    import time
-    time.sleep(10)
-    responseJson = {"isSuccessful":1, "errMsg":[],"data":{"长时间延迟也可行"}}
-    return response.json(responseJson)
-    
-
-
-if __name__ == "__main__":
-
-    from sanic import Sanic
-    from sanic_cors import CORS, cross_origin
-
-    app = Sanic(__name__)
-    CORS(app) # 全部跨域
-
-    app.blueprint(bpNoTime)
-
-    app.run(host="127.0.0.1",port=8000) # ,debug=True
 
 

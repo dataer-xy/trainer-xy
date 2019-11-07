@@ -1,18 +1,19 @@
 import tensorflow as tf 
 import os
-from .msmg import MessageManager
+from ....msmg import MessageManager
 
 checkpointPath = None
 checkpointModelName = None
 
-def save_sess():
+def interface_save_sess(trainName):
     
    
     msMg = MessageManager()
+    msMg.band_projectName(trainName)
 
-    sessInfo = msMg.pull("sessInfo")
+    sessInfoDictList = msMg.pull_deplete("sessInfoDict")
 
-    if sessInfo is not None:
+    for sessInfo in sessInfoDictList:
         sess = sessInfo["sess"]
         step = sessInfo["step"]
         saver = tf.train.Saver(max_to_keep=4) 

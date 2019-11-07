@@ -195,7 +195,10 @@ class MessageManager(object):
 
     
     def pull(self,topic):
-        """ 拉取 """
+        """ 拉取 
+        
+        一次一条数据
+        """
 
         # 管理主题
         topic = self.rename_topic(topic)
@@ -204,11 +207,23 @@ class MessageManager(object):
         _,_,dataBytes = self.mqConn.pull(topic)
 
         # 反序列化
-
         data = self.serializer.serialize_inv(dataBytes)
 
         return data
+    
+    # 拉取 取尽队列
+    def pull_deplete(self,topic):
+        """ 拉取 取尽队列 """
+        dataList = []
 
+        while True:
+            data = self.pull(topic)
+            if data is not None:
+                dataList.append(data)
+            else:
+                break
+        
+        return dataList
 
     def show_all_topic(self):
         print(self.list_queues())

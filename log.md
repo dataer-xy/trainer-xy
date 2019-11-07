@@ -9,15 +9,15 @@
 
 ## train
 * 消息结构整理好 OK
-* sysinfo 
+* sysinfo OK
 * trainer 调用 sysinfo 子进程
 
 
 
-# 后端
+# 后端 11-7
 
-epochState，batchState回传
-sess等什么时候处理？
+* epochState，batchState回传 OK
+* sess等什么时候处理？挂在到 modelconfig 信息中
 
 
 # 前端

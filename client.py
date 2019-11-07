@@ -61,11 +61,11 @@ def train(lineModel,trainDataSet,validDataSet,msMg):
 
     #----------------------------------------------------------------------------
     # 固定消息：
-    # 数据集信息1 2
-    # 模型信息1
-    # 训练信息1 2 
-    # 消息队列信息1
-    # 机器信息1 2
+    # 数据集信息1 2 | 1 2  （静态，动态，后端静态，后端动态）
+    # 模型信息1 | 1
+    # 训练信息1 2 | 1 2
+    # 消息队列信息1 | 1
+    # 机器信息1 2 | 1 2
     
     # 
     trainStaticInfoDict = {
@@ -97,7 +97,7 @@ def train(lineModel,trainDataSet,validDataSet,msMg):
     # Popen对象创建后，主程序不会自动等待子进程完成
     # 什么时间停止子进程？异常时需要主动杀死，因为不会自动关闭 # TODO
     cmd = "python sysinfo.py {trainName}".format(trainName=trainName)
-    sysInfoSubprocess = subprocess.Popen(cmd, stdout=subprocess.PIPE,stderr=subprocess.PIPE,shell=True)
+    sysInfoSubprocess = subprocess.Popen(cmd,stdout=subprocess.PIPE,stderr=subprocess.PIPE,shell=True)
 
 
     #----------------------------------------------------------------------------
@@ -177,8 +177,8 @@ def train(lineModel,trainDataSet,validDataSet,msMg):
                 #----------------------------------------------------------------------------
                 # 数据集信息
 
-                dsIterInfo = outputDict["_info"]
-                msMg.push(dsIterInfo,topic="dsIterInfo")
+                dsIterInfoDict = outputDict["_info"]
+                msMg.push(dsIterInfoDict,topic="dsIterInfoDict")
 
                 #----------------------------------------------------------------------------
                 # 训练信息
@@ -200,23 +200,23 @@ def train(lineModel,trainDataSet,validDataSet,msMg):
 
                 # 模型保存 OK
                 if step % modelConfig.modelStepSave == 0:
-                    sessInfo = {
+                    sessInfoDict = {
                         "step":step,
                         "sess":sess
                     }
-                    msMg.push(sessInfo,topic="sessInfo")
+                    msMg.push(sessInfoDict,topic="sessInfoDict")
 
 
                 # 模型可视化 OK - tensorboard
                 if step % modelConfig.summaryStepSave == 0:
-                    summaryInfo = {
+                    summaryInfoDict = {
                         "step":step,
                         "summaryStr":summaryStr,
                         "runMetadata":runMetadata,
                         "graph":sess.graph
                     }
 
-                    msMg.push(summaryInfo,topic="summaryInfo")
+                    msMg.push(summaryInfoDict,topic="summaryInfoDict")
 
 
 
