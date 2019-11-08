@@ -25,7 +25,7 @@ export default {
             // 绘制图表
             myChart.setOption({
                 title: {
-                    text: "折线图堆叠"
+                    text: ""
                 },
                 tooltip: {
                     trigger: "axis"
