@@ -1,39 +1,24 @@
 // 将多个按钮放在一起
+// 在组件上使用 v-for https://cn.vuejs.org/v2/guide/list.html#%E5%9C%A8-v-for-%E9%87%8C%E4%BD%BF%E7%94%A8%E5%80%BC%E8%8C%83%E5%9B%B4
 
-<template>
-    <div >
-
+<template >
+    <div class="bottomlist" >
+        <ButtomBase v-for="buttomInfo in this.buttomInfoList" :key="buttomInfo.id" v-bind="buttomInfo"></ButtomBase>
     </div>
 </template>
 
 <script>
-// TODO 这个地方放到外面算了 并且改成对象数组
-const buttomMap = new Map()
-buttomMap
-    .set("pauseBatch",4)
-    .set("continueBatch",5)
 
-buttomTooltipMap
-    .set("pauseBatch","暂停下一个 batch")
-    .set("continueBatch","继续 batch")
-
-buttomConfirmMap
-    .set("continueBatch","继续 batch")
-
+import ButtomBase from "./ButtomBase"
 
 export default {
+    name : "ButtomList",
 
     data() {
         return {
             // stop, pauseEpoch,continueEpoch pauseBatch,continueBatch
             buttomInfoList : [
-                {
-                    buttomStr :"stop",
-                    buttomType : "warning",
-                    confirmStr : "真的要终止训练吗？一般在训练不理想或者已经饱和的时候，才主动终止训练！",
-                    tooltipContent:"终止训练",
-                    stateInt:0
-                },
+
                 {
                     buttomStr :"pauseEpoch",
                     buttomType : "warning",
@@ -49,11 +34,25 @@ export default {
                     stateInt:3
                 },
                 {
-                    buttomStr :"continueEpoch",
+                    buttomStr :"pauseBatch",
+                    buttomType : "warning",
+                    confirmStr : "将在下一个 batch 暂停，不要多次点击。如果要继续训练，点击 continueBatch ！",
+                    tooltipContent:"在下一个 batch 暂停",
+                    stateInt:4
+                },
+                {
+                    buttomStr :"continueBatch",
                     buttomType : "info",
-                    confirmStr : "将在下一个 batch zha，不要多次点击。如果要继续训练，点击 continueBatch ！",
-                    tooltipContent:"继续 epoch",
-                    stateInt:3
+                    confirmStr : "继续 batch",
+                    tooltipContent:"继续 batch",
+                    stateInt:5
+                },
+                {
+                    buttomStr :"stop",
+                    buttomType : "warning",
+                    confirmStr : "真的要终止训练吗？一般在训练不理想或者已经饱和的时候，才主动终止训练！",
+                    tooltipContent:"终止训练",
+                    stateInt:0
                 },
             ]
         }
@@ -64,10 +63,16 @@ export default {
     methods: {
         
     },
+    components : {
+        ButtomBase
+    }
     
 }
 </script>
 
 <style scoped>
-
+.bottomlist{
+    display:flex; /* 横向排列 */
+    
+} 
 </style>

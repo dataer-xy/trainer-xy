@@ -1,38 +1,35 @@
 <template>
   <div id="app">
     <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
-    <HelloWorld msg=" python 项目结构规划 " />
-    <myChart></myChart>
-    <ButtomBase v-bind="this.propObj"></ButtomBase>
-
+    <HelloWorld msg=" Trainer Dashboard " />
+    <SessionTitle sessContent="静态信息"></SessionTitle>
+    <StaticTable></StaticTable>
+    <SessionTitle sessContent="动态信息"></SessionTitle>
+    <TrainDynamic></TrainDynamic>
+    
   </div>
 </template>
 
 <script>
 import HelloWorld from "./components/HelloWorld.vue";
-import myChart from "./components/EchartsTest.vue";
-import ButtomBase from "./components/ButtomBase"
+import TrainDynamic from "./components/TrainDynamic"
+import SessionTitle from "./components/SessionTitle"
+import StaticTable from "./components/StaticTable"
 
 export default {
   name: "app",
   data: function() {
     return {
-      propObj: {
-        buttomType: "warning",
-        buttomStr: "pauseEpoch",
-        confirmStr:
-          "将暂停下一个 epoch，不要多次点击。如果要继续训练，点击 continueEpoch ！",
-        stateInt: 2,
-        tooltipContent : "暂停下一个 epoch"
-      }
+      
     };
   },
 
 
   components: {
     HelloWorld,
-    myChart,
-    ButtomBase
+    TrainDynamic,
+    SessionTitle,
+    StaticTable,
   }
 };
 </script>

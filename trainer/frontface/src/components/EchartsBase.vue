@@ -1,11 +1,11 @@
 <template>
-  <div id="myChart" style="width: 600px;height: 400px"></div>
+  <div id="linechart" style="width: 600px;height: 400px;margin:0 auto"></div>
 </template>
 
-<script lang="ts">
+<script>
 
 export default {
-    name : "myChart",
+    name : "LineChart",
 
     // 数据
     data : function () {
@@ -21,9 +21,9 @@ export default {
     methods: {
         drawLine() {
             // 基于准备好的dom，初始化echarts实例
-            let myChart = this.$echarts.init(document.getElementById("myChart"));
+            let linechart = this.$echarts.init(document.getElementById("linechart"));
             // 绘制图表
-            myChart.setOption({
+            linechart.setOption({
                 title: {
                     text: ""
                 },
@@ -92,8 +92,8 @@ export default {
 </script>
 
 <style scoped>
-/* #myChart {
+#linechart {
     width: '500px';
     height: '300px';
-} */
+}
 </style>

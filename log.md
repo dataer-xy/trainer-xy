@@ -33,4 +33,5 @@
 * 写程序
 
 * echart style 绑定大小
+* echartbase prop url即可，自动从后端获取数据
 
