@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
+import HelloWorld from "./components/HelloWorld";
 import TrainDynamic from "./components/TrainDynamic"
 import SessionTitle from "./components/SessionTitle"
 import StaticTable from "./components/StaticTable"
