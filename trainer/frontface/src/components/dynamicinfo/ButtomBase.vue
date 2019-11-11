@@ -15,7 +15,7 @@
 
 <script>
 
-import {DEBUG,BaseUrl} from "../js/config"
+import {DEBUG,BaseUrl} from "../config"
 
 export default {
     name:"ButtomBase",

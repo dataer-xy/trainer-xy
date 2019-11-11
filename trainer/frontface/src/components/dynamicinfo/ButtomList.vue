@@ -3,7 +3,10 @@
 
 <template >
     <div class="bottomlist" >
-        <ButtomBase v-for="buttomInfo in this.buttomInfoList" :key="buttomInfo.id" v-bind="buttomInfo"></ButtomBase>
+        <ButtomBase 
+        v-for="buttomInfo in this.buttomInfoList" :key="buttomInfo.id" 
+        v-bind="buttomInfo" >
+        </ButtomBase>
     </div>
 </template>
 

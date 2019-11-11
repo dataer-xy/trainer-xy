@@ -24,6 +24,7 @@
 * 服务配置好 OK
 * 测试 request OK
 
+* train 静态属性增加 tag
 * 后端的初始化是发送一个 index.html (由前端提供)
 
 

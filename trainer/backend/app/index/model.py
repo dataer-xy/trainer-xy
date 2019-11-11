@@ -3,7 +3,10 @@ from ....core.msmg import MessageManager
 
 
 def interface_get_all_trainer():
-    """ 获取所有 trainer 名称 """
+    """ 获取所有 trainer 名称 
+    TODO：bug
+    
+    """
 
     msMg = MessageManager()
 
