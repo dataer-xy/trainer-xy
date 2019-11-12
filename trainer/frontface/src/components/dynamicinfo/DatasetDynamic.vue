@@ -102,7 +102,7 @@ export default {
     // this.request_dataset_dynamic_info();
   },
   methods: {
-    // TODO 处理图数据
+    // TODO 处理图数据 追加到原始数据中 append
     _handle_dsDynamicInfoDict(dsDynamicInfoDict) {
       /**
        *
