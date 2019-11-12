@@ -31,7 +31,11 @@ def request_sys_static_info(request):
 
 
     responseData = {
-        "mainData":sysStaticInfoDict
+        "mainData":{
+            "partTitle":"系统静态信息",
+            "sysStaticInfoDict":sysStaticInfoDict
+        }
+        
     }
 
     responseJson = {

@@ -1,9 +1,7 @@
 // 训练动态信息，是自治的
 <template>
   <div class="traindynamic">
-    <el-tag>{{tag}}</el-tag>
-
-      <LineChart v-bind:lineChartId="this.lineChartId"></LineChart>
+    <LineChart v-bind:lineChartId="this.lineChartId"></LineChart>
 
     <ButtomList></ButtomList>
   </div>

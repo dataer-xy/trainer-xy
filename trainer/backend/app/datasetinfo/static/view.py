@@ -127,7 +127,10 @@ def request_dataset_static_info(request):
     dsStaticInfoDict = interface_dataset_static_info(trainName,isGetAll)
 
     responseData = {
-        "mainData":dsStaticInfoDict
+        "mainData":{
+            "partTitle":"数据集静态信息",
+            "dsStaticInfoDict":dsStaticInfoDict
+        }
     }
 
     responseJson = {

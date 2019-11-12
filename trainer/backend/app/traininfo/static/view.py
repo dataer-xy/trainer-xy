@@ -31,7 +31,11 @@ def request_train_static_info(request):
 
 
     responseData = {
-        "mainData":trainStaticInfoDict
+        "mainData":{
+            "partTitle":"训练静态信息",
+            "trainStaticInfoDict":trainStaticInfoDict
+        }
+        
     }
 
     responseJson = {

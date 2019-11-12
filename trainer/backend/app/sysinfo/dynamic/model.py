@@ -11,4 +11,3 @@ def interface_sys_dynamic_info(trainName,isGetAll):
     sysDynamicInfoDict = mq_to_sql(topic,tablename,trainName,isGetAll)
 
     return sysDynamicInfoDict
-

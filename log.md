@@ -33,6 +33,7 @@
 * 设计结构
 * 写程序
 
-* echart style 绑定大小
+* echart 
 * echartbase prop url即可，自动从后端获取数据
 
+* 走马灯 箭头

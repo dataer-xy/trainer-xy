@@ -2,10 +2,7 @@
 
 <template>
   <div class="sysdynamic">
-    <el-tag>{{tag}}</el-tag>
-
-      <LineChart v-bind:lineChartId="this.lineChartId"></LineChart>
-
+    <LineChart v-bind:lineChartId="this.lineChartId"></LineChart>
   </div>
 </template>
 

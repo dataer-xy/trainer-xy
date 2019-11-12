@@ -31,7 +31,11 @@ def request_dataset_dynamic_info(request):
 
 
     responseData = {
-        "mainData":dsDynamicInfoDict
+        "mainData":{
+            "partTitle": "数据集动态信息",
+            "dsDynamicInfoDict":dsDynamicInfoDict
+        }
+        
     }
 
     responseJson = {

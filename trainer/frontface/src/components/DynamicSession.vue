@@ -8,6 +8,9 @@
       <TrainDynamic></TrainDynamic>
       <SysDynamic></SysDynamic>
     </div>
+    <div class="dynamicsession-foot">
+      <!-- 无内容扩展高度 -->
+    </div>
   </div>
 </template>
 
@@ -43,6 +46,9 @@ export default {
 }
 .sysdynamic {
   display: inline-block;
+}
+.dynamicsession-foot{
+  height: 30px;
 }
 </style>
 

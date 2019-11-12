@@ -8,3 +8,5 @@ cnpm install element-ui -S
 
 cnpm install axios -S
 cnpm install vue-axios -S
+
+cnpm install vue-awesonme-swiper --save

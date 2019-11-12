@@ -2,7 +2,7 @@
 <template>
   <div class="wapper">
     <el-container>
-      <el-aside width="200px">
+      <el-aside width="201px">
         <NavTrainer></NavTrainer>
       </el-aside>
       <el-container>
@@ -26,13 +26,14 @@ import Header from "./Header";
 import DynamicSession from "./DynamicSession";
 import StaticSession from "./StaticSession";
 
+
 export default {
   name: "Wapper",
   components: {
     Header,
     NavTrainer,
     DynamicSession,
-    StaticSession
+    StaticSession,
   }
 };
 </script>
@@ -65,6 +66,6 @@ export default {
   background-color: #e9eef3;
   color: #333;
   text-align: center;
-  line-height: 160px;
+  /* line-height: 500px; */
 }
 </style>

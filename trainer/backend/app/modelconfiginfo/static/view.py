@@ -31,7 +31,10 @@ def request_modelconfig_static_info(request):
 
 
     responseData = {
-        "mainData":modelconfigStaticInfoDict
+        "mainData":{
+            "partTitle":"模型静态信息",
+            "modelconfigStaticInfoDict":modelconfigStaticInfoDict
+        }
     }
 
     responseJson = {

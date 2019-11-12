@@ -17,3 +17,4 @@ def interface_dataset_dynamic_info(trainName,isGetAll):
     dsDynamicInfoDict = mq_to_sql(topic,tablename,trainName,isGetAll)
 
     return dsDynamicInfoDict
+

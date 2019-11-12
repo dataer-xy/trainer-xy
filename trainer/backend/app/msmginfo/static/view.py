@@ -31,7 +31,10 @@ def request_msmg_static_info(request):
 
 
     responseData = {
-        "mainData":msmgStaticInfoDict
+        "mainData":{
+            "partTitle":"MQ静态信息",
+            "msmgStaticInfoDict":msmgStaticInfoDict
+        }
     }
 
     responseJson = {
