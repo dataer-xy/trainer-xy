@@ -32,19 +32,22 @@ export default {
     SessionTitle,
     TrainDynamic,
     DatasetDynamic,
-    SysDynamic
+    SysDynamic,
   }
 };
 </script>
 
 <style scoped>
 .datasetdynamic {
+  padding: 20px;
   display: inline-block;
 }
 .traindynamic {
+  padding: 20px;
   display: inline-block;
 }
 .sysdynamic {
+  padding: 20px;
   display: inline-block;
 }
 .dynamicsession-foot{

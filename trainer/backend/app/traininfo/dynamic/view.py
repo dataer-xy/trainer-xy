@@ -31,7 +31,10 @@ def request_train_dynamic_info(request):
 
 
     responseData = {
-        "mainData":trainDynamicInfoDict
+        "mainData":{
+            "partTitle":"训练动态信息",
+            "trainDynamicInfoDict":trainDynamicInfoDict
+        }
     }
 
     responseJson = {

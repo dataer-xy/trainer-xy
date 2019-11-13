@@ -1,12 +1,19 @@
 // 折线图
 <template>
-  <el-card>
-    <el-tag>{{this.partTitle}}</el-tag>
-    <div class="linechart-nothing">
-      <!-- 无内容填充高度 -->
-    </div>
-    <div class="linechart-fig" v-bind:id="this.lineChartId" style="width: 400px;height: 400px;margin:0 auto"></div>
-  </el-card>
+  <div class="linechart">
+    <!-- <el-card> -->
+      <!-- 卡片显示 -->
+      <el-tag>{{this.partTitle}}</el-tag>
+      <div class="linechart-nothing">
+        <!-- 无内容填充高度 -->
+      </div>
+      <div
+        class="linechart-fig"
+        v-bind:id="this.lineChartId"
+        style="width: 400px;height: 400px;margin:0 auto"
+      ></div>
+    <!-- </el-card> -->
+  </div>
 </template>
 
 <script>
@@ -16,7 +23,8 @@ export default {
   props: [
     "partTitle", // 主题
     "lineChartId", // id 索引
-    "plotData" 
+    "plotData", // 原始数据
+    "addData" // 新增数据
   ],
 
   // 数据
@@ -26,47 +34,72 @@ export default {
 
   // 生命周期函数 表示挂载完毕，html 已经渲染
   mounted() {
-    this.drawLine();
+    this.$nextTick(function() {
+      this.drawLine(this.lineChartId);
+      this.linechart.setOption({
+        series: this.plotData.data
+      });
+    });
   },
 
+  // watch
+  watch: {
+    addData: function(newVal) {
+      window.console.log("检测到了新的值！"); // OK
+      for (let newData of newVal) {
+        // window.console.log(newData) // 0123
+        this.linechart.appendData(newData); // 有 appendData
+      }
+
+      this.linechart.resize();
+    }
+  },
   // 方法
   methods: {
-    drawLine() {
+    drawLine(domId) {
       // 基于准备好的dom，初始化echarts实例
-      let linechart = this.$echarts.init(
-        document.getElementById(this.lineChartId)
-      );
+      this.linechart = this.$echarts.init(document.getElementById(domId));
       // 绘制图表
-      linechart.setOption({
+      this.linechart.setOption({
         title: {
           text: ""
         },
         tooltip: {
-          trigger: "axis"
+          trigger: "axis",
+          axisPointer: {
+            animation: false
+          }
         },
         legend: {
           data: this.plotData.legend
         },
-        grid: {
-          left: "3%",
-          right: "4%",
-          bottom: "3%",
-          containLabel: true
-        },
+        // grid: {
+        //   left: "3%",
+        //   right: "4%",
+        //   bottom: "3%",
+        //   containLabel: true
+        // },
         toolbox: {
           feature: {
             saveAsImage: {}
           }
         },
         xAxis: {
-          type: "category",
+          type: "value", //"time"
           boundaryGap: false,
-          data: this.plotData.xTicks
+          splitLine: {
+            show: false
+          }
+          // data: this.plotData.xTicks
         },
         yAxis: {
-          type: "value"
+          type: "value",
+          // boundaryGap: [0, "100%"],
+          splitLine: {
+            show: false
+          }
         },
-        series: this.plotData.data
+        animation: false
       });
     }
   }
@@ -74,13 +107,13 @@ export default {
 </script>
 
 <style scoped>
-.linechart-nothing{
+.linechart-nothing {
   height: 10px;
 }
 .el-tag {
   height: 40px;
   padding: 10px;
-  line-height: 25px;
+  line-height: 20px;
   font-size: 16px;
 }
 </style>

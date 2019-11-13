@@ -57,7 +57,7 @@ def main(trainName):
 
     # 动态量
     
-
+    step = 0
     isStartFlag = True
     while True:
         
@@ -100,6 +100,7 @@ def main(trainName):
         
         # 
         sysIterInfoDict = {
+            "step":step,
             "cpuPercent":cpuPercent,
             "memoryPercent":memoryPercent,
             "netRecvPercent":netRecvPercent,
@@ -116,6 +117,8 @@ def main(trainName):
         oldNetSend = netSent
         oldDiskWrite = diskWrite
         oldDiskRead = diskRead
+
+        step += 1
 
 
 

@@ -33,7 +33,6 @@
 * 设计结构
 * 写程序
 
-* echart 
-* echartbase prop url即可，自动从后端获取数据
-
+* 边框
+* buttom
 * 走马灯 箭头

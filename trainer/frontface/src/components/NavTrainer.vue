@@ -22,15 +22,17 @@
           <el-menu-item index="1-1">trainer1</el-menu-item>
           <el-menu-item index="1-2">trainer2</el-menu-item>
         </el-menu-item-group>
-        <el-submenu index="1-4">
-          <span slot="title">选项4</span>
-          <el-menu-item index="1-4-1">选项1</el-menu-item>
-        </el-submenu>
       </el-submenu>
-      <el-menu-item index="2">
+      <el-submenu index="2">
+        <template slot="title">
         <i class="el-icon-menu"></i>
         <span slot="title">projectName2</span>
-      </el-menu-item>
+        </template>
+        <el-menu-item-group>
+          <el-menu-item index="1-1">trainer1</el-menu-item>
+          <el-menu-item index="1-2">trainer2</el-menu-item>
+        </el-menu-item-group>
+      </el-submenu>
       <el-menu-item index="3">
         <i class="el-icon-setting"></i>
         <span slot="title">projectName3</span>
@@ -41,21 +43,21 @@
 
 <script>
 export default {
-    name:"NavTrainer",
-    data() {
-        return {
-            isCollapse: true
-        };
-    },
-    methods: {
-        handleOpen(key, keyPath) {
-            window.console.log(key, keyPath);
-        },
-        handleClose(key, keyPath) {
-            window.console.log(key, keyPath);
-        }
-    }
+  name: "NavTrainer",
+  data() {
+    return {
+      isCollapse: true
     };
+  },
+  methods: {
+    handleOpen(key, keyPath) {
+      window.console.log(key, keyPath);
+    },
+    handleClose(key, keyPath) {
+      window.console.log(key, keyPath);
+    }
+  }
+};
 </script>
 
 <style scoped>

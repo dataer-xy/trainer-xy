@@ -75,6 +75,7 @@ def train(lineModel,trainDataSet,validDataSet,msMg):
     
     # 
     trainStaticInfoDict = {
+        "projectName": ? # TODO
         "trainName":trainName,
         "startTime":startTime,
         "totalStep":totalStep,

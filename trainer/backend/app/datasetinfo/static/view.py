@@ -129,7 +129,7 @@ def request_dataset_static_info(request):
     responseData = {
         "mainData":{
             "partTitle":"数据集静态信息",
-            "dsStaticInfoDict":dsStaticInfoDict
+            "dsStaticInfoDict":dsStaticInfoDict # --> dict 完全
         }
     }
 

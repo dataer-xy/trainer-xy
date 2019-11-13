@@ -31,7 +31,10 @@ def request_sys_dynamic_info(request):
 
 
     responseData = {
-        "mainData":sysDynamicInfoDict
+        "mainData":{
+            "partTitle": "机器动态信息",
+            "sysDynamicInfoDict":sysDynamicInfoDict # --> {col1:[],col2:[],col3:[]}
+        }
     }
 
     responseJson = {

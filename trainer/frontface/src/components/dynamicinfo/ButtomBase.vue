@@ -4,7 +4,7 @@
 // 3、消息发送成功时，会有弹窗
 
 <template>
-    <div class="buttom">
+    <div class="buttombase">
         <el-tooltip v-bind:content="this.tooltipContent" placement="top">
             <el-button v-bind:type="this.buttomType" @click="this.on_send_state" v-bind:roundButton="this.round">
                 {{this.buttomStr}}
@@ -74,7 +74,6 @@ export default {
                         // 向后端发送消息
                         this.send_state()
                     } else {
-
                         this.$message({
                             type: 'success',
                             message: `消息${this.stateInt}发送成功!`
@@ -97,7 +96,5 @@ export default {
 </script>
 
 <style scoped>
-/* .buttom {
-    margin:0 auto;
-} */
+
 </style>
