@@ -36,7 +36,7 @@ export default {
     return {
       round: true, // 按钮形状
 
-      jsonData: {
+      requestJsonData: {
         mainData: {
             trainName:null,
             state : this.stateInt, // TODO prop 可以吗？
@@ -61,7 +61,7 @@ export default {
     send_state() {
       this.axios
         .post(this.bpRoute, {
-          data: this.jsonData,
+          data: this.requestJsonData,
           baseURL: BaseUrl
         })
         .then(resp => {
@@ -69,7 +69,7 @@ export default {
           window.console.log(resp.data);
           this.$message({
             type: "success",
-            message: `消息${this.jsonData.mainData.state}发送成功!`
+            message: `消息${this.requestJsonData.mainData.state}发送成功!`
           });
         })
         .catch(err => {
@@ -98,7 +98,7 @@ export default {
           } else {
             this.$message({
               type: "success",
-              message: `消息${this.jsonData.mainData.state}发送成功!`
+              message: `消息${this.requestJsonData.mainData.state}发送成功!`
             });
           }
         })

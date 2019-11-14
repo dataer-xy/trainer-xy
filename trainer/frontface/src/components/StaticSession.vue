@@ -4,39 +4,28 @@
   <div class="staticsession">
     <SessionTitle v-bind:sessContent="this.sessionContent"></SessionTitle>
     <div class="staticsession-body">
-      <!-- <ModelStatic></ModelStatic>
-      <DatasetStatic></DatasetStatic>
-      <TrainStatic></TrainStatic>
-      <SysStatic></SysStatic>
-      <MsmgStatic></MsmgStatic>-->
-
       <!-- swiper 走马灯 https://github.surmon.me/vue-awesome-swiper/  -->
-      <md-card>
-        <md-card-media>
-          <!-- swiper -->
-          <swiper :options="swiperOption">
-            <swiper-slide>
-              <ModelStatic></ModelStatic>
-            </swiper-slide>
-            <swiper-slide>
-              <DatasetStatic></DatasetStatic>
-            </swiper-slide>
-            <swiper-slide>
-              <TrainStatic></TrainStatic>
-            </swiper-slide>
-            <swiper-slide>
-              <SysStatic></SysStatic>
-            </swiper-slide>
-            <swiper-slide>
-              <MsmgStatic></MsmgStatic>
-            </swiper-slide>
+      <swiper :options="swiperOption">
+        <swiper-slide>
+          <ModelStatic></ModelStatic>
+        </swiper-slide>
+        <swiper-slide>
+          <DatasetStatic></DatasetStatic>
+        </swiper-slide>
+        <swiper-slide>
+          <TrainStatic></TrainStatic>
+        </swiper-slide>
+        <swiper-slide>
+          <SysStatic></SysStatic>
+        </swiper-slide>
+        <swiper-slide>
+          <MsmgStatic></MsmgStatic>
+        </swiper-slide>
 
-            <div class="swiper-pagination" slot="pagination"></div>
-            <div class="swiper-button-prev" slot="button-prev"></div>
-            <div class="swiper-button-next" slot="button-next"></div>
-          </swiper>
-        </md-card-media>
-      </md-card>
+        <div class="swiper-pagination" slot="pagination"></div>
+        <div class="swiper-button-prev" slot="button-prev"></div>
+        <div class="swiper-button-next" slot="button-next"></div>
+      </swiper>
     </div>
 
     <div class="staticsession-foot">
@@ -67,13 +56,12 @@ export default {
         },
 
         navigation: {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev'
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev"
         }
       },
 
-      sessionContent: "静态信息",
-
+      sessionContent: "静态信息"
     };
   },
 
@@ -98,27 +86,17 @@ export default {
 
 .datasetstatic {
   display: inline-block;
-  /* padding: 8px; */
-  /* width: 400px; */
 }
 .trainstatic {
   display: inline-block;
-  /* padding: 8px; */
-  /* width: 400px; */
 }
 .sysstatic {
   display: inline-block;
-  /* padding: 8px; */
-  /* width: 400px; */
 }
 .msmgstatic {
   display: inline-block;
-  /* padding: 8px; */
-  /* width: 400px; */
 }
 .modelstatic {
   display: inline-block;
-  /* padding: 8px; */
-  /* width: 400px; */
 }
 </style>
