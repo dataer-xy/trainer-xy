@@ -19,7 +19,7 @@ export default {
       // input:
       requestJsonData: {
         mainData: {
-          trainName: "test",
+          trainName: null,
           isGetAll: true
         }
       },
@@ -99,20 +99,19 @@ export default {
       }
     };
   },
-  computed: {
-    isGetAll: function() {
-      // TODO 静态方法，始终是 true，非静态方法要判断 null
-      if (this.responseJsonData.tableData.length > 0) {
-        return false;
-      } else {
-        return true;
-      }
-    }
-  },
-
-    mounted() {
-      // this.request_msmg_static_info();
+  computed : {
+    trainNameForWatch : function(){
+      return this.$root.GlobalTrainName
     },
+  },
+  watch : {
+    trainNameForWatch : function () {
+      this.requestJsonData.mainData.trainName=this.$root.GlobalTrainName
+    },
+  },
+  mounted() {
+    // this.request_msmg_static_info();
+  },
   methods: {
     // 处理 响应数据
     _handle_msmgStaticInfoDict(msmgStaticInfoDict) {
@@ -140,9 +139,7 @@ export default {
           let partTitle = orginalData.partTitle; // 标题
 
           let msmgStaticInfoDict = orginalData.msmgStaticInfoDict;
-          let tableData = this._handle_msmgStaticInfoDict(
-            msmgStaticInfoDict
-          ); // 表数据
+          let tableData = this._handle_msmgStaticInfoDict(msmgStaticInfoDict); // 表数据
           let responseJsonData = { partTitle, tableData };
           this.responseJsonData = responseJsonData;
         })

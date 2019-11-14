@@ -23,14 +23,16 @@ export default {
           confirmStr:
             "将在下一个 epoch 暂停，不要多次点击。如果要继续训练，点击 continueEpoch ！",
           tooltipContent: "在下一个 epoch 暂停",
-          stateInt: 2
+          stateInt: 2,
+          bpRoute : "/bpEpochState"
         },
         {
           buttomStr: "continueEpoch",
           buttomType: "info",
           confirmStr: "继续 epoch",
           tooltipContent: "继续 epoch",
-          stateInt: 3
+          stateInt: 3,
+          bpRoute : "/bpEpochState"
         },
         {
           buttomStr: "pauseBatch",
@@ -38,14 +40,16 @@ export default {
           confirmStr:
             "将在下一个 batch 暂停，不要多次点击。如果要继续训练，点击 continueBatch ！",
           tooltipContent: "在下一个 batch 暂停",
-          stateInt: 4
+          stateInt: 4,
+          bpRoute : "/bpBatchState"
         },
         {
           buttomStr: "continueBatch",
           buttomType: "info",
           confirmStr: "继续 batch",
           tooltipContent: "继续 batch",
-          stateInt: 5
+          stateInt: 5,
+          bpRoute:"/bpBatchState"
         },
         {
           buttomStr: "stop",
@@ -53,7 +57,8 @@ export default {
           confirmStr:
             "真的要终止训练吗？一般在训练不理想或者已经饱和的时候，才主动终止训练！",
           tooltipContent: "终止训练",
-          stateInt: 0
+          stateInt: 0,
+          bpRoute:"/bpBatchState"
         }
       ]
     };
@@ -69,7 +74,7 @@ export default {
 </script>
 
 <style scoped>
-.buttombase{
+.buttombase {
    display: inline;
    padding-left: 3px;
    padding-right: 3px;

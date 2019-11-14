@@ -16,6 +16,7 @@ sys.path.append(BASE_DIR) # 添加路径要在引用之前
 
 
 from .app.index.view import bpIndex
+from .app.trainlist.view import bpTrainList
 from .app.batchstate.view import bpBatchState
 from .app.datasetinfo.static.view import bpDsStaticInfo
 from .app.datasetinfo.dynamic.view import bpDsDynamicInfo
@@ -78,6 +79,7 @@ CORS(app,automatic_options=True) # resolve pre-flight request problem (https://d
 # 蓝图 OK
 bpApi = Blueprint.group(
     bpIndex, 
+    bpTrainList,
     bpBatchState,
     bpDsStaticInfo,
     bpDsDynamicInfo,

@@ -24,10 +24,11 @@ export default {
 
   data() {
     return {
+      // trainNameForWatch:this.$root.GlobalTrainName,
       // input:
       requestJsonData: {
         mainData: {
-          trainName: "test", // TODO
+          trainName: null,
           isGetAll: true // TODO this.isGetAll 可以将整个请求 放到里面
         }
       },
@@ -98,16 +99,20 @@ export default {
       }
     };
   },
-  computed: {
-    isGetAll: function() {
-      // TODO 静态方法，始终是 true，非静态方法要判断 null
-      if (this.responseJsonData.plotData.data[0].data.length > 0) {
-        return false;
-      } else {
-        return true;
-      }
-    }
+  computed : {
+    trainNameForWatch : function(){
+      window.console.log(`全局 train name 是 ${this.$root.GlobalTrainName}`)
+      return this.$root.GlobalTrainName
+    },
   },
+  watch : {
+    trainNameForWatch : function () {
+      window.console.log(`${lineChartId}检测到trainname改变`)
+      this.requestJsonData.mainData.trainName = this.$root.GlobalTrainName
+      this.requestJsonData.mainData.isGetAll=true
+    },
+  },
+
   mounted() {
     this.circula_request_dataset_dynamic_info();
   },
@@ -254,7 +259,7 @@ export default {
     // 循环请求
     circula_request_dataset_dynamic_info() {
       // setTimeout(this.request_dataset_dynamic_info, circulaTime);
-      window.console.log("进入到循环请求！");
+      // window.console.log("进入到循环请求！");
       setTimeout(() => {
         this.responseJsonData.addData = [
           {

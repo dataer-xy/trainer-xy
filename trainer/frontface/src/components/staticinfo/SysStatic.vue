@@ -1,26 +1,26 @@
 // 系统静态信息 自治
 
 <template>
-    <div class="sysstatic">
-        <StaticTable v-bind="this.responseJsonData"></StaticTable>
-    </div>
+  <div class="sysstatic">
+    <StaticTable v-bind="this.responseJsonData"></StaticTable>
+  </div>
 </template>
 
 <script>
 import { BaseUrl } from "../config";
-import StaticTable from "./StaticTable"
+import StaticTable from "./StaticTable";
 //
 let bpSysStaticInfo = "/bpSysStaticInfo";
 
 export default {
-    name:"SysStatic",
+  name: "SysStatic",
 
   data() {
     return {
       // input:
       requestJsonData: {
         mainData: {
-          trainName: "test",
+          trainName: null,
           isGetAll: true
         }
       },
@@ -100,17 +100,16 @@ export default {
       }
     };
   },
-  computed: {
-    isGetAll: function() {
-      // TODO 静态方法，始终是 true，非静态方法要判断 null
-      if (this.responseJsonData.tableData.length > 0) {
-        return false;
-      } else {
-        return true;
-      }
-    }
+  computed : {
+    trainNameForWatch : function(){
+      return this.$root.GlobalTrainName
+    },
   },
-
+  watch : {
+    trainNameForWatch : function () {
+      this.requestJsonData.mainData.trainName=this.$root.GlobalTrainName
+    },
+  },
   mounted() {
     // this.request_sys_static_info();
   },
@@ -142,9 +141,7 @@ export default {
           let partTitle = orginalData.partTitle; // 标题
 
           let sysStaticInfoDict = orginalData.sysStaticInfoDict;
-          let tableData = this._handle_sysStaticInfoDict(
-            sysStaticInfoDict
-          ); // 表数据
+          let tableData = this._handle_sysStaticInfoDict(sysStaticInfoDict); // 表数据
           let responseJsonData = { partTitle, tableData };
           this.responseJsonData = responseJsonData;
         })
@@ -156,13 +153,11 @@ export default {
     }
   },
 
-    components :{
-        StaticTable,
-    }
-
-}
+  components: {
+    StaticTable
+  }
+};
 </script>
 
 <style scoped>
-
 </style>

@@ -3,7 +3,7 @@ import App from './App.vue'
 
 // echarts
 import echarts from "echarts"
-Vue.prototype.$echarts = echarts
+Vue.prototype.$echarts = echarts // 全局变量
 // let echart = require("echarts/lib/echarts") // 引入基本模板
 // require("echarts/lib/chart/bar") // 引入 bar
 
@@ -21,16 +21,24 @@ Vue.use(VueAxios, axios)
 // swiper
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import 'swiper/dist/css/swiper.css' // require styles
-Vue.use(VueAwesomeSwiper, /* { default global options } */)
+Vue.use(VueAwesomeSwiper) /* { default global options } */
 
 
 // config
 Vue.config.productionTip = false
 
- 
+// global
+// Vue.prototype.
+
+
 
 
 // 实例化
 new Vue({
+  data (){
+    return {
+      GlobalTrainName : null
+    }
+  },
   render: h => h(App),
 }).$mount('#app')

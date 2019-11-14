@@ -10,17 +10,8 @@
       <SysStatic></SysStatic>
       <MsmgStatic></MsmgStatic>-->
 
-      <!-- swiper 走马灯 -->
+      <!-- swiper 走马灯 https://github.surmon.me/vue-awesome-swiper/  -->
       <md-card>
-        <md-card-actions>
-          <md-button
-            class="md-icon-button"
-            target="_blank"
-            href="https://github.com/surmon-china/vue-awesome-swiper/blob/master/examples/15-freemode.vue"
-          >
-            <!-- <md-icon>code</md-icon> -->
-          </md-button>
-        </md-card-actions>
         <md-card-media>
           <!-- swiper -->
           <swiper :options="swiperOption">
@@ -41,6 +32,8 @@
             </swiper-slide>
 
             <div class="swiper-pagination" slot="pagination"></div>
+            <div class="swiper-button-prev" slot="button-prev"></div>
+            <div class="swiper-button-next" slot="button-next"></div>
           </swiper>
         </md-card-media>
       </md-card>
@@ -71,6 +64,11 @@ export default {
         pagination: {
           el: ".swiper-pagination",
           clickable: true
+        },
+
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev'
         }
       },
 

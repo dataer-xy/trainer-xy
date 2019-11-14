@@ -24,7 +24,7 @@ def request_epoch_state(request):
     mainData = messageJson["mainData"]
 
     trainName = mainData["trainName"]
-    epochState = mainData["epochState"]
+    epochState = mainData["state"]
 
     interface_send_epochState_to_mq(trainName,epochState)
 

@@ -24,7 +24,7 @@ def request_batch_state(request):
     mainData = messageJson["mainData"]
 
     trainName = mainData["trainName"]
-    batchState = mainData["batchState"]
+    batchState = mainData["state"]
 
     interface_send_batchState_to_mq(trainName,batchState)
 

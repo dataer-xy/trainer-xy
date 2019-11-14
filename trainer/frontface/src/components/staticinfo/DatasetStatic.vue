@@ -26,7 +26,7 @@ export default {
       // input:
       requestJsonData: {
         mainData: {
-          trainName: "test",
+          trainName: null,
           isGetAll: true
         }
       },
@@ -55,14 +55,14 @@ export default {
     };
   },
   computed : {
-      isGetAll : function (){
-          // TODO 静态方法，始终是 true，非静态方法要判断 null
-          if (this.responseJsonData.tableData.length > 0) {
-              return false;
-          } else {
-              return true;
-          }
-      }
+    trainNameForWatch : function(){
+      return this.$root.GlobalTrainName
+    },
+  },
+  watch : {
+    trainNameForWatch : function () {
+      this.requestJsonData.mainData.trainName=this.$root.GlobalTrainName
+    },
   },
 
   mounted() {
