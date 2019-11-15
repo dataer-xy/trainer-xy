@@ -7,6 +7,8 @@
       <DatasetDynamic></DatasetDynamic>
       <TrainDynamic></TrainDynamic>
       <SysDynamic></SysDynamic>
+      <SessDynamic></SessDynamic>
+      <SummaryDynamic></SummaryDynamic>
     </div>
     <div class="dynamicsession-foot">
       <!-- 无内容扩展高度 -->
@@ -19,6 +21,8 @@ import SessionTitle from "./SessionTitle";
 import TrainDynamic from "./dynamicinfo/TrainDynamic";
 import DatasetDynamic from "./dynamicinfo/DatasetDynamic";
 import SysDynamic from "./dynamicinfo/SysDynamic";
+import SessDynamic from "./dynamicinfo/SessDynamic"
+import SummaryDynamic from "./dynamicinfo/SummaryDynamic"
 
 export default {
   name: "DynamicSession",
@@ -33,6 +37,8 @@ export default {
     TrainDynamic,
     DatasetDynamic,
     SysDynamic,
+    SessDynamic,
+    SummaryDynamic
   }
 };
 </script>

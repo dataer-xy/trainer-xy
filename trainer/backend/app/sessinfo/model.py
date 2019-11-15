@@ -10,7 +10,7 @@ def interface_sess_dynamic_info(trainName,isGetAll=False):
     
     # 
     msMg = MessageManager()
-    msMg.band_projectName(trainName)
+    msMg.band_trainName(trainName)
 
     sessInfoDictList = msMg.pull_deplete("sessInfoDict")
 

@@ -24,7 +24,7 @@ def get_args():
 
 def link_msmg(trainName):
     msMg = MessageManager()
-    msMg.bind_projectName(trainName)
+    msMg.band_trainName(trainName)
     return msMg
 
 

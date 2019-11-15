@@ -163,16 +163,18 @@ class MessageManager(object):
         self.mqConn = MqConn(connType=self.connType)
         self.serializer = Serializer(serializeType=self.serializeType)
 
-        self.projectName = None # NOTE: 声明，为绑定留位置。并不是属性，而是依赖，绑定是为了防止调用时未声明的情况
+        self.trainName = None # NOTE: 声明，为绑定留位置。并不是属性，而是依赖，绑定是为了防止调用时未声明的情况
     
-    def band_projectName(self,projectName):
-        self.projectName = projectName
+    def band_trainName(self,trainName):
+        self.trainName = trainName
 
+    def free_trainName(self):
+        self.trainName = None
 
     def rename_topic(self,topic):
-        if self.projectName:
+        if self.trainName:
             topic = "{proj}_{topic}".format(
-                proj=self.projectName,
+                proj=self.trainName,
                 topic=topic
             )
         return topic
@@ -267,23 +269,23 @@ class MessageManager(object):
         self.mqConn.delete_queue(topic=topic)
 
 
-    def clear_projectName(self,projectName=None):
-        """ 清除某项目下的所有队列 
+    def clear_trainName(self,trainName=None):
+        """ 清除某train下的所有队列 
         
         Parameters
         ----------
-        projectName : str / None
+        trainName : str / None
             项目名称，用于过滤
         """
 
-        if projectName is None:
-            projectName = self.projectName
+        if trainName is None:
+            trainName = self.trainName
         
         queueNameList = self.list_queues()
 
         # 循环删除队列
         for queueName in queueNameList:
-            if queueName.split("_")[0] == projectName:
+            if queueName.split("_")[0] == trainName:
                 self.mqConn.delete_queue(topic=queueName) 
 
     def describe(self):
@@ -291,7 +293,12 @@ class MessageManager(object):
 
         msmgInfoDict = {
             "connType":self.connType,
-            "serializeType":self.serializeType
+            "serializeType":self.serializeType,
+            "host":self.mqConn.host,
+            "port":self.mqConn.port,
+            "virtualHost":self.mqConn.virtualHost,
+            "user":self.mqConn.user,
+            # "password":self.mqConn.password,
         }
 
         return msmgInfoDict
@@ -301,7 +308,7 @@ class MessageManager(object):
 def __test1():
     
     msMg = MessageManager()
-    msMg.clear_projectName("a")
+    msMg.clear_trainName("a")
 
     print("end")
 

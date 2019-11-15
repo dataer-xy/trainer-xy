@@ -20,7 +20,7 @@ def mq_to_sql(topic,tablename,trainName,isGetAll):
     """
 
     msMg = MessageManager()
-    msMg.band_projectName(trainName)
+    msMg.band_trainName(trainName)
 
     tdsStaticInfoDictList = msMg.pull_deplete(topic=topic) # list(dict)
     tdsStaticInfoTable = pd.DataFrame(tdsStaticInfoDictList)
@@ -45,7 +45,7 @@ def message_to_mq(trainName,data,topic):
     """ 消息发送到消息队列 """
 
     msMg = MessageManager()
-    msMg.band_projectName(trainName)
+    msMg.band_trainName(trainName)
 
     msMg.push(data,topic)
 

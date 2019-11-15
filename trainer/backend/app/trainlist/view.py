@@ -25,7 +25,9 @@ def request_trainlist(request):
     projectNameList = interface_get_all_trainer()
 
     responseData = {
-        "mainData":projectNameList # {trainName:projectName}
+        "mainData":{
+            "projectNameList" : projectNameList
+        } # {trainName:projectName}
     }
 
     responseJson = {

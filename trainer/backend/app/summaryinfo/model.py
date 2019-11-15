@@ -10,7 +10,7 @@ def interface_summary_dynamic_info(trainName,isGetAll):
 
     # 
     msMg = MessageManager()
-    msMg.band_projectName(trainName)
+    msMg.band_trainName(trainName)
 
     summaryInfoDictList = msMg.pull(topic="summaryInfoDict")
 
@@ -26,8 +26,8 @@ def interface_summary_dynamic_info(trainName,isGetAll):
         graph = summaryInfo["graph"]
 
         summaryWriter.add_graph(graph)
-
-        summaryWriter.add_run_metadata(runMetadata, 'step{}'.format(step), global_step=step)
+        if runMetadata is not None:
+            summaryWriter.add_run_metadata(runMetadata, 'step{}'.format(step), global_step=step)
 
         summaryWriter.add_summary(summaryStr, global_step=step) # buffer--as str
 

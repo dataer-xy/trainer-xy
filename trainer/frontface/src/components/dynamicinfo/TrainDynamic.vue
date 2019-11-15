@@ -97,13 +97,12 @@ export default {
   },
   computed : {
     trainNameForWatch : function(){
-      window.console.log(`全局 train name 是 ${this.$root.GlobalTrainName}`)
       return this.$root.GlobalTrainName
     },
   },
   watch : {
     trainNameForWatch : function () {
-      window.console.log(`${lineChartId}检测到trainname改变`)
+      window.console.log(`${lineChartId}检测到trainname改变 ${this.$root.GlobalTrainName}`)
       this.requestJsonData.mainData.trainName = this.$root.GlobalTrainName
       this.requestJsonData.mainData.isGetAll=true
     },
