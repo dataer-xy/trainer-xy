@@ -1,8 +1,7 @@
+import os
+
 from ..utils.pathJoinUtils import my_path_join
 from ..utils.dirFileUtils import mkdir_my
-
-
-import os
 
 #--------------------------------------------------------------------------------
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),os.path.pardir)) # 父级目录

@@ -103,6 +103,10 @@ app.blueprint(bpApi)
 # config OK
 app.config.from_object(globalconfig) # Objects are usually either modules or classes -- 可以在后面的文件中，通过request.app.config[key] 来引用配置
 
+
+# 
+app.static('/static', './static')  # while in docker files from static will be served by ngnix
+
 # TODO: 虚拟主机
 
 if __name__ =="__main__":

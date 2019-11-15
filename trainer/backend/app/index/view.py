@@ -1,6 +1,11 @@
 
-""" 发送 index.html """
+""" 发送 index.html
 
+NOTE: 静态文件由 nginx 发送
+
+"""
+
+import os 
 
 try:
     import ujson as jsonModule
@@ -20,5 +25,7 @@ def index(request):
     messageJson = request.json
 
     mainData = messageJson["mainData"]
+
+    indexFile = os.path.join( os.path.abspath( os.path.join(os.path.dirname(os.path.abspath(__file__)),os.pardir,os.pardir)),"static","html")
     
-    return response.html()
+    return response.file()

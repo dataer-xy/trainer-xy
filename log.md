@@ -13,7 +13,7 @@
 * trainer 调用 sysinfo 子进程 OK
 * train stopState 发送到哪里？ 只能在 batch 上停止 OK
 * sess summary 还有些问题
-* train 终止问题 return 0 ?
+* train 终止问题 return 0 ? 
 
 
 
