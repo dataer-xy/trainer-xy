@@ -14,7 +14,8 @@ def interface_dataset_dynamic_info(trainName,isGetAll):
     """
     topic = "dsIterInfoDict"
     tablename = "dsIterInfoTable"
-    dsDynamicInfoDict = mq_to_sql(topic,tablename,trainName,isGetAll)
+    isOnlyOne=False
+    dsDynamicInfoDict = mq_to_sql(topic,tablename,trainName,isGetAll,isOnlyOne)
 
     return dsDynamicInfoDict
 

@@ -15,7 +15,7 @@ from sanic import response
 
 from .model import interface_dataset_dynamic_info
 
-bpDsDynamicInfo = Blueprint(name="bpDsDynamicInfo",url_prefix="bpDsDynamicInfo")
+bpDsDynamicInfo = Blueprint(name="bpDsDynamicInfo",url_prefix="/bpDsDynamicInfo")
 
 @bpDsDynamicInfo.route("/", methods=['GET','POST'])
 def request_dataset_dynamic_info(request):

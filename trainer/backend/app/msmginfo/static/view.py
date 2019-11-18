@@ -15,7 +15,7 @@ from sanic import response
 
 from .model import interface_msmg_static_info
 
-bpMsmgStaticInfo = Blueprint(name="bpMsmgStaticInfo",url_prefix="bpMsmgStaticInfo")
+bpMsmgStaticInfo = Blueprint(name="bpMsmgStaticInfo",url_prefix="/bpMsmgStaticInfo")
 
 @bpMsmgStaticInfo.route("/", methods=['GET','POST'])
 def request_msmg_static_info(request):

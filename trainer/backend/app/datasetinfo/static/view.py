@@ -64,57 +64,6 @@ def request_dataset_static_info(request):
             }
     """
     
-
-    if DEBUG:
-        print("进入函数。。。")
-        print(request)
-        print(dir(request))
-        
-        # OPTION 的时候，body是空，post 的时候，body 是 b"[object Object]""
-
-        # print(request.body) # --> b"[object Object]""
-        # print(jsonModule.loads(request.body.decode())) # NOTE: 会出错
-        # python 自己请求是好的，而js请求失败，那就是js 请求有错误
-        # bytes.decode()
-        # on Python 3.5 json.loads only supports str not bytes
-        
-        # OK 解析输入参数
-        messageJson = request.json # --> dict json格式的字符串,并自动调用json解析为dict
-        print(messageJson)
-        print(type(messageJson)) # dict
-
-        # OK 取出主要的数据
-        mainData = messageJson["mainData"]
-        print(mainData)
-        print(mainData.keys())
-
-        # OK 从主要数据中取出输入参数
-        gpby = mainData["gpby"] # --> 
-        searchgroup = mainData["searchgroup"]
-        isSendCorrcoef = bool(mainData["isSendCorrcoef"])
-        isSendFig = bool(mainData["isSendFig"])
-        print(gpby),print(searchgroup),print(isSendCorrcoef),print(isSendFig)
-
-        # OK 构建响应数据，测试返回效果
-        gpKnowledgeCountDict = {"我":"32","你":"64","tta":"64"}
-        gpKnowledgeTfidfDict = {"我":"32","你":"64","tta":"64"}
-        import pandas as pd
-        vsmVecCorrcoef = pd.DataFrame([[1,2,3],[4,5,5]],columns=["a","b","c"])
-        corrfigStr = "AnalysisCEESystem/webserver/notimesearch"
-        barfigStr = "AnalysisCEESystem/webserver/notimesearch"
-        wcfigStr = "AnalysisCEESystem/webserver/notimesearch"
-
-        responseData = {"knowCount":gpKnowledgeCountDict,
-                        "knowTfidf":gpKnowledgeTfidfDict,
-                        "corrcoef":vsmVecCorrcoef.to_dict("index"),
-                        "corrfig":corrfigStr,
-                        "barfig":barfigStr,
-                        "wcfig":wcfigStr}
-
-        responseJson = {"isSuccessful":1, "errMsg":[],"data":responseData}
-        return response.json(body=responseJson) 
-
-
     # TODO: OK 从request中获取数据
     messageJson = request.json # json格式的字符串 -- 是一个章节对象
     # request.args # url 中的参数

@@ -12,7 +12,7 @@ from sanic import response
 
 from .model import interface_get_all_trainer
 
-bpTrainList = Blueprint(name="bpTrainList",url_prefix="bpTrainList")
+bpTrainList = Blueprint(name="bpTrainList",url_prefix="/bpTrainList")
 
 @bpTrainList.route("/",methods=["GET","POST"])
 def request_trainlist(request):

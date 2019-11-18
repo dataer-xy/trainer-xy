@@ -24,8 +24,9 @@ def interface_summary_dynamic_info(trainName,isGetAll):
         summaryStr = summaryInfo["summaryStr"]
         runMetadata = summaryInfo["runMetadata"]
         graph = summaryInfo["graph"]
-
-        summaryWriter.add_graph(graph)
+        
+        if graph is not None:
+            summaryWriter.add_graph(graph)
         if runMetadata is not None:
             summaryWriter.add_run_metadata(runMetadata, 'step{}'.format(step), global_step=step)
 

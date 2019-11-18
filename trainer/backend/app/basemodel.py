@@ -1,15 +1,36 @@
 
+import numpy as np 
 import pandas as pd 
 
 from ...core.msmg import MessageManager
-from myutils.linksqlUtils import link_mysql_ifnotexit_creat
-from myutils.linksqlUtils import create_engine_mysql
-from myutils.pandasUtils import _my_dataframe_to_sql
+from ...utils.linksqlUtils import link_mysql_ifnotexit_creat
+from ...utils.linksqlUtils import create_engine_mysql
+from ...utils.pandasUtils import _my_dataframe_to_sql
 
 
-def mq_to_sql(topic,tablename,trainName,isGetAll):
-    """
+def my_pandas_to_dict(df,isOnlyOne=True):
+    """对大小是1的表是否好用？ 可以，不知道json 的时候会不会有问题？OK"""
+
+    outputDict = {}
+    columns = df.columns
     
+    if not isOnlyOne:
+        for columnsName in columns:
+            outputDict[columnsName] = df[columnsName].tolist() # np.stack(df[columnsName]) 
+    else:
+        for columnsName in columns:
+            outputDict[columnsName] = df[columnsName].tolist()[0]
+
+
+    return outputDict
+
+
+
+
+def mq_to_sql(topic,tablename,trainName,isGetAll,isOnlyOne=True):
+    """
+    isOnlyOne=True 静态的纯字典，否则，动态的字典k-v(str:list)
+
     Step
         读取 mq
         io mysql
@@ -25,17 +46,19 @@ def mq_to_sql(topic,tablename,trainName,isGetAll):
     tdsStaticInfoDictList = msMg.pull_deplete(topic=topic) # list(dict)
     tdsStaticInfoTable = pd.DataFrame(tdsStaticInfoDictList)
 
+    con = link_mysql_ifnotexit_creat(trainName)
+    engine = create_engine_mysql(trainName)
+
     if len(tdsStaticInfoDictList) > 0:
-        con = link_mysql_ifnotexit_creat(trainName)
-        engine = create_engine_mysql(trainName)
         _my_dataframe_to_sql(tdsStaticInfoTable,tablename,con=con,engine=engine,if_exists="append")
 
 
     if isGetAll:
+        print("正在加载全部数据！")
         querySql = "select * from {tablename}".format(tablename=tablename)
         tdsStaticInfoTable = pd.read_sql(querySql,con=engine)
 
-    tdsStaticInfoDict = tdsStaticInfoTable.to_dict() # TODO if none return none
+    tdsStaticInfoDict = my_pandas_to_dict(tdsStaticInfoTable,isOnlyOne)
 
     return tdsStaticInfoDict
 
@@ -55,6 +78,7 @@ def get_modelconfig_from_sql(trainName):
     """ 从 sql 中获取模型配置信息 """
     tablename = "modelConfigStaticInfoTable"
     querySql = "select * from {tablename}".format(tablename=tablename)
+    engine = create_engine_mysql(trainName)
     modelconfigStaticInfoTable = pd.read_sql(querySql,con=engine)
 
     modelconfigStaticInfoDict = modelconfigStaticInfoTable.to_dict()

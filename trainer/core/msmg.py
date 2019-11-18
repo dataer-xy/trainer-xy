@@ -141,14 +141,15 @@ class Serializer(object):
 
     def serialize(self,a):
         """序列化"""
-
         return self.serializeTool.dumps(a)
 
 
     def serialize_inv(self,b):
         """反序列化"""
-
-        return self.serializeTool.loads(b)
+        if b is not None:
+            return self.serializeTool.loads(b)
+        else:
+            return b
 
 
 class MessageManager(object):

@@ -15,7 +15,7 @@ from sanic import response
 
 from .model import interface_sys_static_info
 
-bpSysStaticInfo = Blueprint(name="bpSysStaticInfo",url_prefix="bpSysStaticInfo")
+bpSysStaticInfo = Blueprint(name="bpSysStaticInfo",url_prefix="/bpSysStaticInfo")
 
 @bpSysStaticInfo.route("/", methods=['GET','POST'])
 def request_sys_static_info(request):

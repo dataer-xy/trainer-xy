@@ -26,7 +26,7 @@ class ModelConfig(object):
     
     def __init__(self):
         self.learnRate = 0.5 # 学习率
-        self.deno = 1000 # 分母
+        self.deno = 1 # 分母
 
         # 训练部分
         self.batchSize = 64 # OK

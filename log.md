@@ -14,6 +14,8 @@
 * train stopState 发送到哪里？ 只能在 batch 上停止 OK
 * sess summary 还有些问题
 * train 终止问题 return 0 ? 
+* sysinfo 定义成进程或子进程
+* mq 主动关闭了连接 https://blog.csdn.net/csdn_am/article/details/79894662
 
 
 
@@ -40,6 +42,11 @@
 * buttom OK
 * 走马灯 箭头 OK
 * sess summary 隐藏请求 OK
+* isGetAll 时，echart 要清空
+
+* stop 发送仍然有问题
+* 删除某个trainer 
+
 
 # 调试 11-15
 

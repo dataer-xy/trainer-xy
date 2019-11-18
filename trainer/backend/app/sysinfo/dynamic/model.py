@@ -7,7 +7,7 @@ def interface_sys_dynamic_info(trainName,isGetAll):
 
     topic = "sysIterInfoDict"
     tablename = "sysIterInfoTable"
-
-    sysDynamicInfoDict = mq_to_sql(topic,tablename,trainName,isGetAll)
+    isOnlyOne=False
+    sysDynamicInfoDict = mq_to_sql(topic,tablename,trainName,isGetAll,isOnlyOne)
 
     return sysDynamicInfoDict

@@ -16,7 +16,7 @@ from sanic import Blueprint
 from sanic import response
 
 
-bpIndex = Blueprint(name="bpIndex",url_prefix="bpIndex")
+bpIndex = Blueprint(name="bpIndex",url_prefix="/bpIndex")
 
 @bpIndex.route("/",methods=["GET","POST"])
 def index(request):

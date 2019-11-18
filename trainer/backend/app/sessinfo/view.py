@@ -15,7 +15,7 @@ from sanic import response
 
 from .model import interface_sess_dynamic_info
 
-bpSessDynamicInfo = Blueprint(name="bpSessDynamicInfo",url_prefix="bpSessDynamicInfo")
+bpSessDynamicInfo = Blueprint(name="bpSessDynamicInfo",url_prefix="/bpSessDynamicInfo")
 
 @bpSessDynamicInfo.route("/", methods=['GET','POST'])
 def request_sess_dynamic_info(request):

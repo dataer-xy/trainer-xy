@@ -14,7 +14,7 @@ from sanic import response
 from .model import interface_send_epochState_to_mq
 
 
-bpEpochState = Blueprint(name="bpEpochState",url_prefix="bpEpochState")
+bpEpochState = Blueprint(name="bpEpochState",url_prefix="/bpEpochState")
 
 @bpEpochState.route("/",methods=['GET','POST'])
 def request_epoch_state(request):

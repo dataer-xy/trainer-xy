@@ -15,7 +15,7 @@ from sanic import response
 
 from .model import interface_train_dynamic_info
 
-bpTrainDynamicInfo = Blueprint(name="bpTrainDynamicInfo",url_prefix="bpTrainDynamicInfo")
+bpTrainDynamicInfo = Blueprint(name="bpTrainDynamicInfo",url_prefix="/bpTrainDynamicInfo")
 
 @bpTrainDynamicInfo.route("/", methods=['GET','POST'])
 def request_train_dynamic_info(request):

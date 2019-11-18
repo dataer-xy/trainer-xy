@@ -15,7 +15,7 @@ from sanic import response
 
 from .model import interface_modelconfig_static_info
 
-bpModelConfigStaticInfo = Blueprint(name="bpModelConfigStaticInfo",url_prefix="bpModelConfigStaticInfo")
+bpModelConfigStaticInfo = Blueprint(name="bpModelConfigStaticInfo",url_prefix="/bpModelConfigStaticInfo")
 
 @bpModelConfigStaticInfo.route("/", methods=['GET','POST'])
 def request_modelconfig_static_info(request):
