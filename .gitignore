@@ -4,4 +4,6 @@ temp
 *.db
 
 outputs
+log
+
 # trainer/frontface
