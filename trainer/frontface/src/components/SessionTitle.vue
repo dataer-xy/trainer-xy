@@ -1,9 +1,8 @@
-// 章节头
 
 <template>
   <div class="sessiontitle">
     <hr class="sess-hr" />
-    <p class="sess-p">{{ sessContent }}</p>
+    <p class="sess-p">{{ this.sessContent }} ({{this.trainNameForWatch}})</p>
   </div>
 </template>
 
@@ -16,7 +15,11 @@ export default {
   data() {
     return {};
   },
-
+  computed: {
+    trainNameForWatch: function() {
+      return this.$root.GlobalTrainName;
+    }
+  },
   methods: {}
 };
 </script>

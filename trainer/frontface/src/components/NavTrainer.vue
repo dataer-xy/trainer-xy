@@ -34,15 +34,30 @@
 </template>
 
 <script>
-import { BaseUrl } from "./config";
+import { BaseUrl,DEBUG } from "./config";
 import TrainButtom from "./TrainButtom";
+
 //
 let bpTrainList = "/bpTrainList";
+//
+let responseJsonData = {}
+if (DEBUG){
+  // 测试用的数据
+  responseJsonData={
+    projectName1: ["201911141211", "201911151211"],
+    projectName2: ["201911161211", "201911171211"],
+    projectName3: ["201911181211", "201911191211"]
+  }
+}
+
+
 export default {
   name: "NavTrainer",
+
   components: {
     TrainButtom
   },
+
   data() {
     return {
       isCollapse: true,
@@ -50,22 +65,29 @@ export default {
       requestJsonData: {
         mainData: {}
       },
-      // output: TODO 请求得到的数据
-      responseJsonData: {
-        projectName1: ["201911141211", "201911151211"],
-        projectName2: ["201911161211", "201911171211"],
-        projectName3: ["201911181211", "201911191211"]
-      }
+      // output:
+      responseJsonData: responseJsonData
     };
   },
+
   mounted() {
-    // this.request_trainlist();
-    this.compute_origianl_trainName();
+    if (!DEBUG){
+      this.request_trainlist();
+    } else {
+      this.compute_origianl_trainName();
+    }
+
+    
   },
+
   methods: {
+
+    /************************************************************/
+
+    // 处理后端请求来的数据
     _handle_projectNameList(projectNameList) {
-      // 输入 ： {trainName:projectName,...}
-      // 输出 ：{projectName:[trainName1,trainName2...]}
+      // 输入 ：projectNameList {trainName:projectName,...}
+      // 输出 ：trainListData {projectName:[trainName1,trainName2...]}
       // "projectName1":["trainer1","trainer2"],
       // "projectName2":["trainer1","trainer2"],
       // "projectName3":["trainer1","trainer2"],
@@ -85,14 +107,15 @@ export default {
       return trainListData;
     },
 
+
+    // 向后端请求数据
     request_trainlist() {
       this.axios
-        .post(bpTrainList, {
-          data: this.requestJsonData,
-          baseURL: BaseUrl
+        .post(bpTrainList, this.requestJsonData, {
+          baseURL: BaseUrl, // 配置未生效！？
         })
         .then(resp => {
-          // TODO 接受响应
+          // 接受响应
           window.console.log(resp.data);
           //
           let orginalData = resp.data.mainData;
@@ -101,6 +124,9 @@ export default {
           let trainListData = this._handle_projectNameList(projectNameList); // 表数据
 
           this.responseJsonData = trainListData;
+
+          // 计算初始化的 name
+          this.compute_origianl_trainName();
         })
         .catch(err => {
           window.console.log(
@@ -109,13 +135,8 @@ export default {
         });
     },
 
-    handleOpen(key, keyPath) {
-      window.console.log(key, keyPath);
-    },
-    handleClose(key, keyPath) {
-      window.console.log(key, keyPath);
-    },
 
+    // 计算时间最大的名字作为开始的目录
     compute_origianl_trainName() {
       // 计算时间最大的名字作为开始的目录
 
@@ -131,7 +152,16 @@ export default {
 
       window.console.log(`当前最大name 是 ${maxTrainName}`); //OK
       this.$root.GlobalTrainName = maxTrainName.toString();
-    }
+    },
+
+    /************************************************************/
+
+    handleOpen(key, keyPath) {
+      window.console.log(key, keyPath);
+    },
+    handleClose(key, keyPath) {
+      window.console.log(key, keyPath);
+    },
   }
 };
 </script>

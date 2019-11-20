@@ -14,7 +14,7 @@ from sanic import response
 from .model import interface_send_batchState_to_mq
 
 
-bpBatchState = Blueprint(name="bpBatchState",url_prefix="bpBatchState")
+bpBatchState = Blueprint(name="bpBatchState",url_prefix="/bpBatchState")
 
 @bpBatchState.route("/",methods=['GET','POST'])
 def request_batch_state(request):
@@ -32,10 +32,10 @@ def request_batch_state(request):
         "mainData":None
     }
 
-    responseJson = {
-        "isSuccessful":1, 
-        "errMsg":[],
-        "data":responseData
-    }
+    # responseJson = {
+    #     "isSuccessful":1, 
+    #     "errMsg":[],
+    #     "data":responseData
+    # }
 
-    return response.json(body=responseJson)
+    return response.json(body=responseData)

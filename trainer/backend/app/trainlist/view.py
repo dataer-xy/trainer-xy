@@ -20,20 +20,20 @@ def request_trainlist(request):
 
     messageJson = request.json
 
-    mainData = messageJson["mainData"]
+    # mainData = messageJson["mainData"]
     
     projectNameList = interface_get_all_trainer()
 
     responseData = {
         "mainData":{
-            "projectNameList" : projectNameList
-        } # {trainName:projectName}
+            "projectNameList" : projectNameList # {trainName:projectName}
+        } 
     }
 
-    responseJson = {
-        "isSuccessful":1, 
-        "errMsg":[],
-        "data":responseData
-    }
+    # responseJson = {
+    #     "isSuccessful":1, 
+    #     "errMsg":[],
+    #     "data":responseData
+    # }
 
-    return response.json(body=responseJson)
+    return response.json(body=responseData)

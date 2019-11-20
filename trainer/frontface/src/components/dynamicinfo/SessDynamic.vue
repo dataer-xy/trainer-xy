@@ -7,17 +7,15 @@
 </template>
 
 <script>
-import { BaseUrl } from "../config";
+import { BaseUrl, DEBUG, circulaTime } from "../config";
 //
 let bpSessDynamicInfo = "/bpSessDynamicInfo"; // url
-// let circulaTime = 60000; // 循环时间 1000 = 1秒
 
 export default {
   name: "SessDynamic",
 
   data() {
     return {
-      // trainNameForWatch : this.$root.GlobalTrainName, // NOTE data 中不可以引用全局动态变量，也不能引用计算属性
       // input:
       requestJsonData: {
         mainData: {
@@ -34,24 +32,23 @@ export default {
   },
   watch: {
     trainNameForWatch: function() {
-      window.console.log(`sess 检测到改变 ${this.$root.GlobalTrainName}`)
+      window.console.log(`sess 检测到改变 ${this.$root.GlobalTrainName}`);
       this.requestJsonData.mainData.trainName = this.$root.GlobalTrainName;
       this.requestJsonData.mainData.isGetAll = true;
+      //
+      this.circula_request_sess_dynamic_info();
     }
   },
-  mounted() {
-    this.circula_request_sess_dynamic_info();
-  },
+  mounted() {},
   methods: {
     // 请求
     request_sess_dynamic_info() {
       this.axios
-        .post(bpSessDynamicInfo, {
-          data: this.requestJsonData,
+        .post(bpSessDynamicInfo, this.requestJsonData, {
           baseURL: BaseUrl
         })
         .then(resp => {
-          // TODO 接受响应
+          // 接受响应
           window.console.log(resp.data);
         })
         .catch(err => {
@@ -63,14 +60,17 @@ export default {
 
     // 循环请求
     circula_request_sess_dynamic_info() {
-      // setTimeout(this.request_sess_dynamic_info, circulaTime);
-      setTimeout(() => {
-        window.console.log("进入到循环请求！");
-      }, 10000);
+      if (!DEBUG) {
+        setInterval(() => {
+          this.request_sess_dynamic_info();
+        }, circulaTime);
+      } else {
+        setInterval(() => {
+          window.console.log("sess 进入到循环请求！");
+        }, circulaTime);
+      }
     }
-  },
-
-
+  }
 };
 </script>
 

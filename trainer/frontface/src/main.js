@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import App from './App.vue'
 
+// global
+// import * as GlobalVar from "./components/config"
+
 // echarts
 import echarts from "echarts"
 Vue.prototype.$echarts = echarts // 全局变量
@@ -18,6 +21,7 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 Vue.use(VueAxios, axios)
 
+
 // swiper
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import 'swiper/dist/css/swiper.css' // require styles
@@ -27,17 +31,14 @@ Vue.use(VueAwesomeSwiper) /* { default global options } */
 // config
 Vue.config.productionTip = false
 
-// global
-// Vue.prototype.
-
-
 
 
 // 实例化
 new Vue({
   data (){
     return {
-      GlobalTrainName : null
+      GlobalTrainName : null,
+      // GLOBAL : GlobalVar
     }
   },
   render: h => h(App),

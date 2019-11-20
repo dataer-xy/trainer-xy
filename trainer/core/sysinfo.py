@@ -13,11 +13,11 @@ import psutil
 import time 
 import argparse
 
-from .msmg import MessageManager
+from trainer.core.msmg import MessageManager
 
 def get_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument("trainName", required=True, type=str, help="训练程序的名称或id")
+    parser.add_argument("trainName", help="训练程序的名称或id")
     args = parser.parse_args()
     return args
 
@@ -31,6 +31,9 @@ def link_msmg(trainName):
 def main(trainName):
     """"""
 
+    print(trainName)
+    if not isinstance(trainName,str):
+        trainName = str(trainName)
     msMg = link_msmg(trainName)
 
     # 静态量
@@ -44,12 +47,14 @@ def main(trainName):
     pynvml.nvmlShutdown()
 
     sleepTime = 1
+    sendTimeStep = 60 # 60 step发送一次结果
 
     sysStaticInfoDict = {
         "cpuCount":cpuCount,
         "memoryTotal":memoryTotal,
         "gpuMemoryTotal":gpuMemoryTotal,
-        "sleepTime":sleepTime
+        "sleepTime":sleepTime,
+        "sendTimeStep":sendTimeStep
     }
 
     msMg.push(sysStaticInfoDict,topic="sysStaticInfoDict")
@@ -99,17 +104,18 @@ def main(trainName):
         diskReadPercent = (diskRead - oldDiskRead) / sleepTime / 1024 # kb/s 
         
         # 
-        sysIterInfoDict = {
-            "step":step,
-            "cpuPercent":cpuPercent,
-            "memoryPercent":memoryPercent,
-            "netRecvPercent":netRecvPercent,
-            "netSendPercent":netSendPercent,
-            "diskWritePercent":diskWritePercent,
-            "diskReadPercent":diskReadPercent
-        }
+        if step % sendTimeStep == 0:
+            sysIterInfoDict = {
+                "step":step,
+                "cpuPercent":cpuPercent,
+                "memoryPercent":memoryPercent,
+                "netRecvPercent":netRecvPercent,
+                "netSendPercent":netSendPercent,
+                "diskWritePercent":diskWritePercent,
+                "diskReadPercent":diskReadPercent
+            }
 
-        msMg.push(sysIterInfoDict,topic="sysIterInfoDict")
+            msMg.push(sysIterInfoDict,topic="sysIterInfoDict")
 
         time.sleep(sleepTime)
 
@@ -120,6 +126,8 @@ def main(trainName):
 
         step += 1
 
+        print(step)
+
 
 
 if __name__ == "__main__":
@@ -127,4 +135,6 @@ if __name__ == "__main__":
     args = get_args()
     trainName = args.trainName
     main(trainName)
+
+    
 

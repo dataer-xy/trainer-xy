@@ -34,24 +34,24 @@ export default {
 
   // 生命周期函数 表示挂载完毕，html 已经渲染
   mounted() {
-    this.$nextTick(function() {
-      this.drawLine(this.lineChartId);
-      this.linechart.setOption({
-        series: this.plotData.data
-      });
+    this.drawLine(this.lineChartId);
+    this.linechart.setOption({
+      series: this.plotData.data
     });
   },
 
   // watch
   watch: {
     addData: function(newVal) {
-      window.console.log("检测到了新的值！"); // OK
       for (let newData of newVal) {
-        // window.console.log(newData) // 0123
         this.linechart.appendData(newData); // 有 appendData
       }
-
       this.linechart.resize();
+    },
+    plotData : function () {
+      this.linechart.setOption({
+        series: this.plotData.data
+      });
     }
   },
   // 方法

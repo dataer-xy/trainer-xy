@@ -21,7 +21,6 @@ import { DEBUG, BaseUrl } from "../config";
 export default {
   name: "ButtomBase",
 
-  // 组件内的静态量，不应该在组件中改变 TODO 直接传对象
   // 如果你想要将一个对象的所有属性都作为 prop 传入，你可以使用不带参数的 v-bind <blog-post v-bind="object""></blog-post>
   props: [
     "buttomType", //  success / info / warning / error
@@ -60,8 +59,7 @@ export default {
     // 向后端发送信息
     send_state() {
       this.axios
-        .post(this.bpRoute, {
-          data: this.requestJsonData,
+        .post(this.bpRoute, this.requestJsonData,{
           baseURL: BaseUrl
         })
         .then(resp => {
@@ -81,9 +79,6 @@ export default {
 
     // 事件
     on_send_state() {
-      // window.console.log(`here${this.buttomType}`)
-      // window.console.log(`here${this.tooltipContent}`)
-      // window.console.log(`here${this.stateInt}`)
       // window.console.log(`here ${this.confirmStr}`)
 
       this.$confirm(`${this.confirmStr}`, "提示", {

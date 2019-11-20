@@ -12,7 +12,7 @@ def interface_summary_dynamic_info(trainName,isGetAll):
     msMg = MessageManager()
     msMg.band_trainName(trainName)
 
-    summaryInfoDictList = msMg.pull(topic="summaryInfoDict")
+    summaryInfoDictList = msMg.pull_deplete(topic="summaryInfoDict")
 
     # 
     modelConfig = get_modelconfig_from_sql(trainName)

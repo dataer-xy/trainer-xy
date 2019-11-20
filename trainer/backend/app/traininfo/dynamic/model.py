@@ -10,4 +10,7 @@ def interface_train_dynamic_info(trainName,isGetAll):
     isOnlyOne=False
     trainDynamicInfoDict = mq_to_sql(topic,tablename,trainName,isGetAll,isOnlyOne)
 
+    selectKey = ["step","loss","acc","loss_val","acc_val"]
+    trainDynamicInfoDict = {k:v for k,v in trainDynamicInfoDict.items() if k in selectKey}
+
     return trainDynamicInfoDict

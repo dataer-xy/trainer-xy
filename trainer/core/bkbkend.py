@@ -1,12 +1,14 @@
 """这个地方放train 函数"""
 
 
-
+import os
 import time
 import tensorflow as tf
 import subprocess
 
 from .modelconfig import modelConfig 
+
+from trainer.core import sysinfo
 
 # TODO 添加到 dataset 中，并且去掉 iter 中重复的
 def _get_maxIter(dataset):
@@ -98,7 +100,8 @@ def train(lineModel,trainDataSet,validDataSet,msMg,projectName):
 
     # Popen对象创建后，主程序不会自动等待子进程完成
     # 什么时间停止子进程？异常时需要主动杀死，因为不会自动关闭
-    cmd = "python sysinfo.py {trainName}".format(trainName=trainName)
+    pyFile = os.path.abspath(sysinfo.__file__)
+    cmd = "python {pyFile} \"{trainName}\"".format(pyFile=pyFile,trainName=trainName)
     sysInfoSubprocess = subprocess.Popen(cmd,stdout=subprocess.PIPE,stderr=subprocess.PIPE,shell=True)
 
 
@@ -121,13 +124,16 @@ def train(lineModel,trainDataSet,validDataSet,msMg,projectName):
                 epochState = msMg.pull(topic="epochState") # --> int
                 if epochState == 2:
                     # pause 暂停，只能继续消费队列，找到继续/终止命令
+                    print("在epoch暂停！")
                     while epochState != 3 or epochState != 0:
                         epochState = msMg.pull(topic="epochState") # --> int
                     
                     # 2 3 6 None
                     if epochState == 0:
+                        sysInfoSubprocess.kill()
                         return 0 # TODO 终止
                 elif epochState == 0:
+                    sysInfoSubprocess.kill()
                     return 0 # TODO 终止
                 else:
                     pass    
@@ -142,13 +148,16 @@ def train(lineModel,trainDataSet,validDataSet,msMg,projectName):
                     batchState = msMg.pull(topic="batchState") # --> int
                     if batchState == 4:
                         # pause 暂停，只能继续消费队列，找到继续/终止命令
+                        print("在 batch 暂停！")
                         while batchState != 3 or batchState != 0:
                             batchState = msMg.pull(topic="batchState") # --> int
                         
                         # 2 3 6 None
                         if batchState == 0:
+                            sysInfoSubprocess.kill()
                             return 0 # TODO 终止
                     elif batchState == 0:
+                        sysInfoSubprocess.kill()
                         return 0 # TODO 终止
                     else: # 3 4 5 None
                         pass
@@ -201,6 +210,7 @@ def train(lineModel,trainDataSet,validDataSet,msMg,projectName):
                         for _,v in dsIterInfoDict.items():
                             tempDict.update(v)
                         dsIterInfoDict = tempDict 
+                        dsIterInfoDict["step"] = step
                         msMg.push(dsIterInfoDict,topic="dsIterInfoDict")
 
 
@@ -253,7 +263,7 @@ def train(lineModel,trainDataSet,validDataSet,msMg,projectName):
 
                     if validDataSet is not None:
 
-                        if step % (modelConfig.validFrequency * nBatch) == 0:
+                        if step % (modelConfig.validStep) == 0:
                             
                             #----------------------------------------------------------------------------
                             # 计算 validation loss
@@ -285,7 +295,7 @@ def train(lineModel,trainDataSet,validDataSet,msMg,projectName):
                                 "acc_val":valid_accuracy
                             }
                     # 
-                    time.sleep(30)
+                    time.sleep(1.5)
                     step += 1
                     batch_i += 1
             

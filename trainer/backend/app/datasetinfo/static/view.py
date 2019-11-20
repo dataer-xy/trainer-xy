@@ -23,7 +23,6 @@ except :
 from sanic import Blueprint
 from sanic import response
 
-# from AnalysisCEESystem.config.globalConfig import DEBUG
 
 from .model import interface_dataset_static_info
 
@@ -64,9 +63,7 @@ def request_dataset_static_info(request):
             }
     """
     
-    # TODO: OK 从request中获取数据
     messageJson = request.json # json格式的字符串 -- 是一个章节对象
-    # request.args # url 中的参数
 
     mainData = messageJson["mainData"] # --> dict
 
@@ -82,12 +79,12 @@ def request_dataset_static_info(request):
         }
     }
 
-    responseJson = {
-        "isSuccessful":1, 
-        "errMsg":[],
-        "data":responseData
-    }
+    # responseJson = {
+    #     "isSuccessful":1, 
+    #     "errMsg":[],
+    #     "data":responseData
+    # }
 
-    return response.json(body=responseJson)
+    return response.json(body=responseData)
 
 

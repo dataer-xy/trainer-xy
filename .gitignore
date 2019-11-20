@@ -3,4 +3,5 @@ temp
 .vscode
 *.db
 
+outputs
 # trainer/frontface

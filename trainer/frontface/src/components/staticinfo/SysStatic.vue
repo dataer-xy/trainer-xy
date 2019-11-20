@@ -7,13 +7,91 @@
 </template>
 
 <script>
-import { BaseUrl } from "../config";
+import { BaseUrl, DEBUG } from "../config";
 import StaticTable from "./StaticTable";
 //
 let bpSysStaticInfo = "/bpSysStaticInfo";
 
+//
+let responseJsonData = {};
+if (DEBUG) {
+  responseJsonData = {
+    partTitle: "系统静态信息", // part title
+    tableData: [
+      {
+        key: "2016-05-02",
+        value: "王小虎"
+      },
+      {
+        key: "2016-05-04",
+        value: "王小虎王小虎王小虎王小虎王小虎王小虎王小虎王小虎"
+      },
+      {
+        key: "2016-05-01",
+        value: "王小虎王小虎王小虎王小虎王小虎王小虎王小虎王小虎王小虎王小虎"
+      },
+      {
+        key: "2016-05-03",
+        value: "王小虎"
+      },
+      {
+        key: "2016-05-02",
+        value: "王小虎"
+      },
+      {
+        key: "2016-05-04",
+        value: "王小虎王小虎王小虎王小虎王小虎王小虎王小虎王小虎"
+      },
+      {
+        key: "2016-05-01",
+        value: "王小虎王小虎王小虎王小虎王小虎王小虎王小虎王小虎王小虎王小虎"
+      },
+      {
+        key: "2016-05-03",
+        value: "王小虎"
+      },
+      {
+        key: "2016-05-02",
+        value: "王小虎"
+      },
+      {
+        key: "2016-05-04",
+        value: "王小虎王小虎王小虎王小虎王小虎王小虎王小虎王小虎"
+      },
+      {
+        key: "2016-05-01",
+        value: "王小虎王小虎王小虎王小虎王小虎王小虎王小虎王小虎王小虎王小虎"
+      },
+      {
+        key: "2016-05-03",
+        value: "王小虎"
+      },
+      {
+        key: "2016-05-02",
+        value: "王小虎"
+      },
+      {
+        key: "2016-05-04",
+        value: "王小虎王小虎王小虎王小虎王小虎王小虎王小虎王小虎"
+      },
+      {
+        key: "2016-05-01",
+        value: "王小虎王小虎王小虎王小虎王小虎王小虎王小虎王小虎王小虎王小虎"
+      },
+      {
+        key: "2016-05-03",
+        value: "王小虎"
+      }
+    ]
+  };
+}
+
 export default {
   name: "SysStatic",
+
+  components: {
+    StaticTable
+  },
 
   data() {
     return {
@@ -24,95 +102,24 @@ export default {
           isGetAll: true
         }
       },
-      // output: TODO 请求得到的数据
-      responseJsonData: {
-        partTitle: "系统静态信息", // part title
-        tableData: [
-          {
-            key: "2016-05-02",
-            value: "王小虎"
-          },
-          {
-            key: "2016-05-04",
-            value: "王小虎王小虎王小虎王小虎王小虎王小虎王小虎王小虎"
-          },
-          {
-            key: "2016-05-01",
-            value:
-              "王小虎王小虎王小虎王小虎王小虎王小虎王小虎王小虎王小虎王小虎"
-          },
-          {
-            key: "2016-05-03",
-            value: "王小虎"
-          },
-          {
-            key: "2016-05-02",
-            value: "王小虎"
-          },
-          {
-            key: "2016-05-04",
-            value: "王小虎王小虎王小虎王小虎王小虎王小虎王小虎王小虎"
-          },
-          {
-            key: "2016-05-01",
-            value:
-              "王小虎王小虎王小虎王小虎王小虎王小虎王小虎王小虎王小虎王小虎"
-          },
-          {
-            key: "2016-05-03",
-            value: "王小虎"
-          },
-          {
-            key: "2016-05-02",
-            value: "王小虎"
-          },
-          {
-            key: "2016-05-04",
-            value: "王小虎王小虎王小虎王小虎王小虎王小虎王小虎王小虎"
-          },
-          {
-            key: "2016-05-01",
-            value:
-              "王小虎王小虎王小虎王小虎王小虎王小虎王小虎王小虎王小虎王小虎"
-          },
-          {
-            key: "2016-05-03",
-            value: "王小虎"
-          },
-          {
-            key: "2016-05-02",
-            value: "王小虎"
-          },
-          {
-            key: "2016-05-04",
-            value: "王小虎王小虎王小虎王小虎王小虎王小虎王小虎王小虎"
-          },
-          {
-            key: "2016-05-01",
-            value:
-              "王小虎王小虎王小虎王小虎王小虎王小虎王小虎王小虎王小虎王小虎"
-          },
-          {
-            key: "2016-05-03",
-            value: "王小虎"
-          }
-        ]
-      }
+      // output: 请求得到的数据
+      responseJsonData: responseJsonData
     };
   },
-  computed : {
-    trainNameForWatch : function(){
-      return this.$root.GlobalTrainName
-    },
+  computed: {
+    trainNameForWatch: function() {
+      return this.$root.GlobalTrainName;
+    }
   },
-  watch : {
-    trainNameForWatch : function () {
-      this.requestJsonData.mainData.trainName=this.$root.GlobalTrainName
-    },
+  watch: {
+    trainNameForWatch: function() {
+      this.requestJsonData.mainData.trainName = this.$root.GlobalTrainName;
+      if (!DEBUG) {
+        this.request_sys_static_info();
+      }
+    }
   },
-  mounted() {
-    // this.request_sys_static_info();
-  },
+  mounted() {},
 
   methods: {
     // 处理 响应数据
@@ -120,7 +127,12 @@ export default {
       let objArray = [];
 
       for (let [k, v] of Object.entries(sysStaticInfoDict)) {
-        objArray.push({ [k]: v });
+        objArray.push(
+          {
+            key: k,
+            value: v 
+          }
+        );
       }
 
       return objArray;
@@ -128,12 +140,11 @@ export default {
 
     request_sys_static_info() {
       this.axios
-        .post(bpSysStaticInfo, {
-          data: this.requestJsonData,
+        .post(bpSysStaticInfo, this.requestJsonData, {
           baseURL: BaseUrl
         })
         .then(resp => {
-          // TODO 接受响应
+          // 接受响应
           window.console.log(resp.data);
           //
           let orginalData = resp.data.mainData;
@@ -151,10 +162,6 @@ export default {
           );
         });
     }
-  },
-
-  components: {
-    StaticTable
   }
 };
 </script>

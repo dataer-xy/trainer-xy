@@ -37,10 +37,10 @@ def request_modelconfig_static_info(request):
         }
     }
 
-    responseJson = {
-        "isSuccessful":1, 
-        "errMsg":[],
-        "data":responseData
-    }
+    # responseJson = {
+    #     "isSuccessful":1, 
+    #     "errMsg":[],
+    #     "data":responseData
+    # }
 
-    return response.json(body=responseJson)
+    return response.json(body=responseData)

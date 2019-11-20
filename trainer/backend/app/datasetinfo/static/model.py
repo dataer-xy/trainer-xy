@@ -25,9 +25,12 @@ def interface_validdataset_static_info(trainName,isGetAll):
 
 
 def interface_dataset_static_info(trainName,isGetAll):
-    tdsStaticInfoDict = interface_traindataset_static_info(trainName,isGetAll)
-    vdsStaticInfoDict = interface_validdataset_static_info(trainName,isGetAll)
 
+    tdsStaticInfoDict = interface_traindataset_static_info(trainName,isGetAll)
+    try:
+        vdsStaticInfoDict = interface_validdataset_static_info(trainName,isGetAll)
+    except:
+        vdsStaticInfoDict = None
     dsStaticInfoDict = {
         "tdsStaticInfoDict":tdsStaticInfoDict,
         "vdsStaticInfoDict":vdsStaticInfoDict

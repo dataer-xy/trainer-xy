@@ -26,7 +26,7 @@ class ModelConfig(object):
     
     def __init__(self):
         self.learnRate = 0.5 # 学习率
-        self.deno = 1 # 分母
+        self.deno = 12 # 分母
 
         # 训练部分
         self.batchSize = 64 # OK
@@ -41,6 +41,7 @@ class ModelConfig(object):
         # 存储
 
         self.printStep = 20 # OK
+        self.validStep = 50
 
         self.summaryStepSave = 20 # 每 20 step 保存一次 summary
         

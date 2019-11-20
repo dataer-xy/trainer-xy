@@ -39,48 +39,55 @@ def mq_to_sql(topic,tablename,trainName,isGetAll,isOnlyOne=True):
         返回数据
     
     """
+    if trainName is not None:
+        msMg = MessageManager()
+        msMg.band_trainName(trainName)
 
-    msMg = MessageManager()
-    msMg.band_trainName(trainName)
+        tdsStaticInfoDictList = msMg.pull_deplete(topic=topic) # list(dict)
+        tdsStaticInfoTable = pd.DataFrame(tdsStaticInfoDictList)
 
-    tdsStaticInfoDictList = msMg.pull_deplete(topic=topic) # list(dict)
-    tdsStaticInfoTable = pd.DataFrame(tdsStaticInfoDictList)
+        con = link_mysql_ifnotexit_creat(trainName)
+        engine = create_engine_mysql(trainName)
 
-    con = link_mysql_ifnotexit_creat(trainName)
-    engine = create_engine_mysql(trainName)
-
-    if len(tdsStaticInfoDictList) > 0:
-        _my_dataframe_to_sql(tdsStaticInfoTable,tablename,con=con,engine=engine,if_exists="append")
+        if len(tdsStaticInfoDictList) > 0:
+            _my_dataframe_to_sql(tdsStaticInfoTable,tablename,con=con,engine=engine,if_exists="append")
 
 
-    if isGetAll:
-        print("正在加载全部数据！")
-        querySql = "select * from {tablename}".format(tablename=tablename)
-        tdsStaticInfoTable = pd.read_sql(querySql,con=engine)
+        if isGetAll:
+            print("正在加载全部数据！")
+            querySql = "select * from {tablename}".format(tablename=tablename)
+            tdsStaticInfoTable = pd.read_sql(querySql,con=engine)
 
-    tdsStaticInfoDict = my_pandas_to_dict(tdsStaticInfoTable,isOnlyOne)
+        tdsStaticInfoDict = my_pandas_to_dict(tdsStaticInfoTable,isOnlyOne)
 
-    return tdsStaticInfoDict
+        return tdsStaticInfoDict
+    else:
+        raise Exception("trainName is None")
 
 
 
 def message_to_mq(trainName,data,topic):
     """ 消息发送到消息队列 """
+    if trainName is not None:
+        msMg = MessageManager()
+        msMg.band_trainName(trainName)
 
-    msMg = MessageManager()
-    msMg.band_trainName(trainName)
-
-    msMg.push(data,topic)
+        msMg.push(data,topic)
+    else:
+        raise Exception("trainName is None")
 
 
 
 def get_modelconfig_from_sql(trainName):
     """ 从 sql 中获取模型配置信息 """
-    tablename = "modelConfigStaticInfoTable"
-    querySql = "select * from {tablename}".format(tablename=tablename)
-    engine = create_engine_mysql(trainName)
-    modelconfigStaticInfoTable = pd.read_sql(querySql,con=engine)
+    if trainName is not None:
+        tablename = "modelConfigStaticInfoTable"
+        querySql = "select * from {tablename}".format(tablename=tablename)
+        engine = create_engine_mysql(trainName)
+        modelconfigStaticInfoTable = pd.read_sql(querySql,con=engine)
 
-    modelconfigStaticInfoDict = modelconfigStaticInfoTable.to_dict()
-    return modelconfigStaticInfoDict
+        modelconfigStaticInfoDict = my_pandas_to_dict(modelconfigStaticInfoTable,isOnlyOne=True)
+        return modelconfigStaticInfoDict
+    else:
+        raise Exception("trainName is None")
 

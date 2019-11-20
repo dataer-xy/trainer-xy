@@ -4,7 +4,10 @@ let DEBUG = true
 
 let PORT = "8075"
 
-let BaseUrl = `https://127.0.0.1:${PORT}/python`
+let HOST = "127.0.0.1"
 
+let BaseUrl = `http://${HOST}:${PORT}/python/`
 
-export {DEBUG,PORT,BaseUrl}
+let circulaTime = 60000; // 循环时间 1000 = 1秒
+
+export {DEBUG,PORT,BaseUrl,circulaTime}

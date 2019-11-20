@@ -8,110 +8,59 @@
 </template>
 
 <script>
-import { BaseUrl } from "../config";
+import { BaseUrl, DEBUG, circulaTime } from "../config";
 import LineChart from "./EchartsBase";
 import ButtomList from "./ButtomList";
 //
 let bpTrainDynamicInfo = "/bpTrainDynamicInfo"; // url
 let lineChartId = "traindyid"; // dom id
-// let circulaTime = 60000; // 循环时间 1000 = 1秒
+
+//
+let plotData = {};
 
 export default {
   name: "TrainDynamic",
   data() {
     return {
-      // trainNameForWatch : this.$root.GlobalTrainName,
       // input:
       requestJsonData: {
         mainData: {
-          trainName: null, // TODO
-          isGetAll: true // TODO this.isGetAll 可以将整个请求 放到里面
+          trainName: null,
+          isGetAll: true
         }
       },
-      // output: TODO 调用后台时，去掉这部分。请求得到的数据
+      // output: 请求得到的数据
       responseJsonData: {
-        partTitle: "训练动态信息",
+        partTitle: "", // "训练动态信息",
         lineChartId: lineChartId,
-        plotData: {
-          legend: ["legend1", "legend2", "legend3", "legend4"],
-          data: [
-            {
-              name: "legend1", // 折线名称
-              type: "line", // 线形
-              showSymbol: false,
-              hoverAnimation: false,
-              data: [
-                [1, 120],
-                [2, 132],
-                [3, 101],
-                [4, 134],
-                [5, 90],
-                [6, 230],
-                [7, 210]
-              ] // 数据
-            },
-            {
-              name: "legend2",
-              type: "line",
-              data: [
-                [1, 220],
-                [2, 182],
-                [3, 191],
-                [4, 234],
-                [5, 290],
-                [6, 330],
-                [7, 310]
-              ]
-            },
-            {
-              name: "legend3",
-              type: "line",
-              data: [
-                [1, 150],
-                [2, 1232],
-                [3, 201],
-                [4, 154],
-                [5, 190],
-                [6, 330],
-                [7, 410]
-              ]
-            },
-            {
-              name: "legend4",
-              type: "line",
-              data: [
-                [1, 320],
-                [2, 332],
-                [3, 301],
-                [4, 334],
-                [5, 390],
-                [6, 330],
-                [7, 320]
-              ]
-            }
-          ]
-        },
+        plotData: plotData,
         addData: []
       }
     };
   },
-  computed : {
-    trainNameForWatch : function(){
-      return this.$root.GlobalTrainName
-    },
+  computed: {
+    trainNameForWatch: function() {
+      return this.$root.GlobalTrainName;
+    }
   },
-  watch : {
-    trainNameForWatch : function () {
-      window.console.log(`${lineChartId}检测到trainname改变 ${this.$root.GlobalTrainName}`)
-      this.requestJsonData.mainData.trainName = this.$root.GlobalTrainName
-      this.requestJsonData.mainData.isGetAll=true
-    },
+  watch: {
+    trainNameForWatch: function() {
+      window.console.log(
+        `${lineChartId}检测到trainname改变 ${this.$root.GlobalTrainName}`
+      );
+      this.requestJsonData.mainData.trainName = this.$root.GlobalTrainName;
+      this.requestJsonData.mainData.isGetAll = true;
+
+      // 初始请求
+      if (!DEBUG) {
+        this.request_train_dynamic_info();
+      } else {
+        this.test();
+      }
+    }
   },
 
-
-  mounted() {
-    this.circula_request_train_dynamic_info();
-  },
+  mounted() {},
   methods: {
     // 处理原始数据
     _handle_trainDynamicInfoDict_all(trainDynamicInfoDict) {
@@ -211,12 +160,11 @@ export default {
     // 请求
     request_train_dynamic_info() {
       this.axios
-        .post(bpTrainDynamicInfo, {
-          data: this.requestJsonData,
+        .post(bpTrainDynamicInfo, this.requestJsonData, {
           baseURL: BaseUrl
         })
         .then(resp => {
-          // TODO 接受响应
+          // 接受响应
           window.console.log(resp.data);
           //
           let orginalData = resp.data.mainData;
@@ -224,26 +172,19 @@ export default {
           let partTitle = orginalData.partTitle; // 标题
 
           let trainDynamicInfoDict = orginalData.trainDynamicInfoDict;
+
+          // 处理原始数据
+          let plotData = this._handle_trainDynamicInfoDict_all(
+            trainDynamicInfoDict
+          ); // 图数据
+          this.responseJsonData.partTitle = partTitle;
+          this.responseJsonData.plotData = plotData; // 数据双向绑定，绘图子组件通过 prop 自动更新
+
           //
-          if (this.requestJsonData.isGetAll) {
-            // 处理原始数据
-            let plotData = this._handle_trainDynamicInfoDict_all(
-              trainDynamicInfoDict
-            ); // 图数据
-            this.responseJsonData = {
-              partTitle: partTitle,
-              lineChartId: this.lineChartId,
-              plotData: plotData,
-              addData: []
-            }; // 数据双向绑定，绘图子组件通过 prop 自动更新
-            this.requestJsonData.isGetAll = false
-          } else {
-            // 处理新增数据
-            let addData = this._handle_trainDynamicInfoDict_notall(
-              trainDynamicInfoDict
-            ); // 图数据
-            this.responseJsonData.addData = addData; // 绘图子组件通过 prop 传递数据，并在内部监听 addData 数据，触发 appendData 事件
-          }
+          this.requestJsonData.mainData.isGetAll = false;
+
+          //
+          this.circula_request_train_dynamic_info();
         })
         .catch(err => {
           window.console.log(
@@ -252,30 +193,128 @@ export default {
         });
     },
 
-    // 循环请求
+    // 请求新数据
+    request_train_dynamic_info_notall() {
+      this.axios
+        .post(bpTrainDynamicInfo, this.requestJsonData, {
+          baseURL: BaseUrl
+        })
+        .then(resp => {
+          // 接受响应
+          window.console.log(resp.data);
+          //
+          let orginalData = resp.data.mainData;
+
+          let trainDynamicInfoDict = orginalData.trainDynamicInfoDict;
+
+          // 处理新增数据
+          let addData = this._handle_trainDynamicInfoDict_notall(
+            trainDynamicInfoDict
+          ); // 图数据
+          this.responseJsonData.addData = addData; // 绘图子组件通过 prop 传递数据，并在内部监听 addData 数据，触发 appendData 事件
+        })
+        .catch(err => {
+          window.console.log(
+            "消息发送失败:" + err.status + "," + err.statusText
+          );
+        });
+    },
+
+    // 循环请求新数据
     circula_request_train_dynamic_info() {
-      // setTimeout(this.request_train_dynamic_info, circulaTime);
-      // window.console.log("进入到循环请求！");
-      setTimeout(() => {
-        this.responseJsonData.addData = [
+      if (!DEBUG) {
+        setInterval(() => {
+          this.request_train_dynamic_info_notall();
+        }, circulaTime);
+      } else {
+        setInterval(() => {
+          this.responseJsonData.addData = [
+            {
+              seriesIndex: 0,
+              data: []
+            },
+            {
+              seriesIndex: 1,
+              data: [[8, 101], [9, 134], [10, 90], [11, 230], [12, 210]]
+            },
+            {
+              seriesIndex: 2,
+              data: [[8, 103], [9, 154], [10, 70], [11, 200], [12, 101]]
+            },
+            {
+              seriesIndex: 3,
+              data: [[8, 123], [9, 174], [10, 80], [11, 270], [12, 200]]
+            }
+          ];
+        }, circulaTime);
+      }
+    },
+
+    // 测试
+    test() {
+      plotData = {
+        legend: ["legend1", "legend2", "legend3", "legend4"],
+        data: [
           {
-            seriesIndex: 0,
-            data: []
+            name: "legend1", // 折线名称
+            type: "line", // 线形
+            showSymbol: false,
+            hoverAnimation: false,
+            data: [
+              [1, 120],
+              [2, 132],
+              [3, 101],
+              [4, 134],
+              [5, 90],
+              [6, 230],
+              [7, 210]
+            ] // 数据
           },
           {
-            seriesIndex: 1,
-            data: [[8, 101], [9, 134], [10, 90], [11, 230], [12, 210]]
+            name: "legend2",
+            type: "line",
+            data: [
+              [1, 220],
+              [2, 182],
+              [3, 191],
+              [4, 234],
+              [5, 290],
+              [6, 330],
+              [7, 310]
+            ]
           },
           {
-            seriesIndex: 2,
-            data: [[8, 103], [9, 154], [10, 70], [11, 200], [12, 101]]
+            name: "legend3",
+            type: "line",
+            data: [
+              [1, 150],
+              [2, 1232],
+              [3, 201],
+              [4, 154],
+              [5, 190],
+              [6, 330],
+              [7, 410]
+            ]
           },
           {
-            seriesIndex: 3,
-            data: [[8, 123], [9, 174], [10, 80], [11, 270], [12, 200]]
+            name: "legend4",
+            type: "line",
+            data: [
+              [1, 320],
+              [2, 332],
+              [3, 301],
+              [4, 334],
+              [5, 390],
+              [6, 330],
+              [7, 320]
+            ]
           }
-        ];
-      }, 10000);
+        ]
+      };
+
+      this.responseJsonData.plotData = plotData;
+      this.requestJsonData.mainData.isGetAll = false;
+      this.circula_request_train_dynamic_info();
     }
   },
   components: {
@@ -286,5 +325,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>
