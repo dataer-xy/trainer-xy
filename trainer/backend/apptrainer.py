@@ -1,19 +1,10 @@
-
-
 import os
 import sys
 from sanic import Sanic
 from sanic_cors import CORS
 from sanic import Blueprint
 
-
-
-from ..config.globalconfig import BASE_DIR
-from ..config.globalconfig import LOG_DIR
-from ..config import globalconfig
-
-sys.path.append(BASE_DIR) # 添加路径要在引用之前
-
+from .loger import build_trainerapp_log
 
 from .app.index.view import bpIndex
 from .app.trainlist.view import bpTrainList
@@ -35,22 +26,8 @@ from .app.test import bpRequestTest
 
 
 # log OK
-import logging
 
-logging_format = "[%(asctime)s] %(process)d-%(levelname)s "
-logging_format += "%(module)s::%(funcName)s():l%(lineno)d: "
-logging_format += "%(message)s"
-
-logging.basicConfig(
-    format=logging_format,
-    level=logging.INFO
-)
-logger = logging.getLogger()
-handler = logging.FileHandler(os.path.join(LOG_DIR,"webserver.log.txt"))
-handler.setLevel(logging.INFO)
-
-logger.addHandler(handler)
-
+logger = build_trainerapp_log()
 
 # OK
 app = Sanic()
@@ -70,8 +47,8 @@ CORS(app,automatic_options=True) # resolve pre-flight request problem (https://d
 #     request['foo'] = 'bar'
 
 
-# TODO: 
-# app.static('/static', './static') # while in docker files from static will be served by ngnix（ , host='www.example.com'）
+#
+app.static('/static', './static')  # while in docker files from static will be served by ngnix（ , host='www.example.com'）
 # app.url_for('static', filename='file.txt') == '/static/file.txt'
 # app.url_for('static', name='static', filename='file.txt') == '/static/file.txt'
 
@@ -99,18 +76,9 @@ bpApi = Blueprint.group(
 app.blueprint(bpApi)
 
 
-
 # config OK
-app.config.from_object(globalconfig) # Objects are usually either modules or classes -- 可以在后面的文件中，通过request.app.config[key] 来引用配置
+# app.config.from_object(globalconfig) # Objects are usually either modules or classes -- 可以在后面的文件中，通过request.app.config[key] 来引用配置
 
-
-# 
-app.static('/static', './static')  # while in docker files from static will be served by ngnix
 
 # TODO: 虚拟主机
-
-if __name__ =="__main__":
-    from ..config.globalConfig import DEBUG
-    from ..config.globalconfig import port
-    app.run(host='127.0.0.1', port=int(port), debug=DEBUG) #  debug模式 网页上会有堆栈，第二个重要的调试模式下的功能，就是重载器，可以在源文件被修改时自动重启应用
 

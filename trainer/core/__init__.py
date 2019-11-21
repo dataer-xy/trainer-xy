@@ -6,3 +6,6 @@ from .msmg import MessageManager
 from .modelconfig import ModelConfigBase
 
 from .sysinfo import run_sysinfo_subprocess
+
+from .config import trainerConfig
+

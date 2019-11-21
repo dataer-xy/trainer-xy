@@ -13,6 +13,8 @@ from .core import MessageManager
 
 from .core import run_sysinfo_subprocess
 
+from .core import trainerConfig
+
 
 #------------------------------------------------------
 # utils
