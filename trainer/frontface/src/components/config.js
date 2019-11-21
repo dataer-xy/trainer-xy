@@ -1,6 +1,6 @@
 
 
-let DEBUG = true
+let DEBUG = false
 
 let PORT = "8075"
 

@@ -116,7 +116,7 @@ export default {
         })
         .then(resp => {
           // 接受响应
-          window.console.log(resp.data);
+          // window.console.log(resp.data);
           //
           let orginalData = resp.data.mainData;
 

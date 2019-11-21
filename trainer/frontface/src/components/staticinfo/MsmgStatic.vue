@@ -145,7 +145,7 @@ export default {
         })
         .then(resp => {
           // 接受响应
-          window.console.log(resp.data);
+          // window.console.log(resp.data);
           //
           let orginalData = resp.data.mainData;
 
@@ -160,6 +160,9 @@ export default {
           window.console.log(
             "消息发送失败:" + err.status + "," + err.statusText
           );
+
+          // 清空
+          this.responseJsonData = {}
         });
     }
   }

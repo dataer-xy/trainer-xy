@@ -22,7 +22,9 @@ export default {
           trainName: null,
           isGetAll: true
         }
-      }
+      },
+      //
+      timer: null
     };
   },
   computed: {
@@ -39,7 +41,6 @@ export default {
       this.circula_request_sess_dynamic_info();
     }
   },
-  mounted() {},
   methods: {
     // 请求
     request_sess_dynamic_info() {
@@ -47,10 +48,14 @@ export default {
         .post(bpSessDynamicInfo, this.requestJsonData, {
           baseURL: BaseUrl
         })
-        .then(resp => {
-          // 接受响应
-          window.console.log(resp.data);
-        })
+        .then(()=>{
+          window.console.log("sess 请求成功！")
+        }
+        //   resp => {
+        //   // 接受响应
+        //   window.console.log(resp.data);
+        // }
+        )
         .catch(err => {
           window.console.log(
             "消息发送失败:" + err.status + "," + err.statusText
@@ -60,15 +65,29 @@ export default {
 
     // 循环请求
     circula_request_sess_dynamic_info() {
+      // 清空
+      if (this.timer) {
+        clearInterval(this.timer);
+      }
+      // 创建
       if (!DEBUG) {
-        setInterval(() => {
+        this.timer = setInterval(() => {
           this.request_sess_dynamic_info();
         }, circulaTime);
       } else {
-        setInterval(() => {
+        this.timer = setInterval(() => {
           window.console.log("sess 进入到循环请求！");
         }, circulaTime);
       }
+    }
+  },
+  /***************************************************************/
+  mounted() {},
+  beforeDestroy() {
+    if (this.timer) {
+      //如果定时器还在运行 或者直接关闭，不用判断
+      clearInterval(this.timer); //关闭
+      this.timer = null;
     }
   }
 };

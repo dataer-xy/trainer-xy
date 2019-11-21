@@ -20,6 +20,10 @@ let plotData = {};
 
 export default {
   name: "TrainDynamic",
+  components: {
+    LineChart,
+    ButtomList
+  },
   data() {
     return {
       // input:
@@ -35,7 +39,9 @@ export default {
         lineChartId: lineChartId,
         plotData: plotData,
         addData: []
-      }
+      },
+      //
+      timer: null
     };
   },
   computed: {
@@ -60,7 +66,6 @@ export default {
     }
   },
 
-  mounted() {},
   methods: {
     // 处理原始数据
     _handle_trainDynamicInfoDict_all(trainDynamicInfoDict) {
@@ -165,7 +170,7 @@ export default {
         })
         .then(resp => {
           // 接受响应
-          window.console.log(resp.data);
+          // window.console.log(resp.data);
           //
           let orginalData = resp.data.mainData;
 
@@ -201,7 +206,7 @@ export default {
         })
         .then(resp => {
           // 接受响应
-          window.console.log(resp.data);
+          // window.console.log(resp.data);
           //
           let orginalData = resp.data.mainData;
 
@@ -222,12 +227,17 @@ export default {
 
     // 循环请求新数据
     circula_request_train_dynamic_info() {
+      // 清空
+      if (this.timer) {
+        clearInterval(this.timer);
+      }
+      //创建
       if (!DEBUG) {
-        setInterval(() => {
+        this.timer = setInterval(() => {
           this.request_train_dynamic_info_notall();
         }, circulaTime);
       } else {
-        setInterval(() => {
+        this.timer = setInterval(() => {
           this.responseJsonData.addData = [
             {
               seriesIndex: 0,
@@ -317,9 +327,14 @@ export default {
       this.circula_request_train_dynamic_info();
     }
   },
-  components: {
-    LineChart,
-    ButtomList
+  /***************************************************************/
+  mounted() {},
+  beforeDestroy() {
+    if (this.timer) {
+      //如果定时器还在运行 或者直接关闭，不用判断
+      clearInterval(this.timer); //关闭
+      this.timer = null;
+    }
   }
 };
 </script>

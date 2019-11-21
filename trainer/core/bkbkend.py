@@ -294,6 +294,11 @@ def train(lineModel,trainDataSet,validDataSet,msMg,projectName):
                                 "loss_val":valid_loss,
                                 "acc_val":valid_accuracy
                             }
+
+                            msMg.push(trainIterInfoDict,topic="trainIterInfoDict")
+
+                            print("正在验证。。。")
+                            print(trainIterInfoDict)
                     # 
                     time.sleep(1.5)
                     step += 1

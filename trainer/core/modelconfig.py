@@ -31,7 +31,7 @@ class ModelConfig(object):
         # 训练部分
         self.batchSize = 64 # OK
 
-        self.epochs = 500 # epoch 次数 step = epochs*批次数 NOTE: 10 epoch 需要 1/4 天
+        self.epochs = 100 # epoch 次数 step = epochs*批次数 NOTE: 10 epoch 需要 1/4 天
 
         self.validFrequency = 2 # ? 个 epoch 验证 1 次
 
