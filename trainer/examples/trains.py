@@ -1,4 +1,8 @@
-"""这个地方放train 函数"""
+"""这个地方放train 函数
+
+训练模板
+
+"""
 
 
 import os
@@ -8,27 +12,16 @@ import subprocess
 
 from .modelconfig import modelConfig 
 
-from trainer.core import sysinfo
+from trainer import run_sysinfo_subprocess
 
-# TODO 添加到 dataset 中，并且去掉 iter 中重复的
-def _get_maxIter(dataset):
-    """ 获取最大迭代次数
-    
-    NOTE:
-        不足一块的会被当成一块
-    """
-    span,mod = divmod(dataset.sampleNum,dataset.batchSize) # 取商取余
-
-    if mod > 0:
-        return span+1
-    else:
-        return span
 
 def build_trainer_name(timefloat):
+    """要能够排列大小"""
     
     trainName = time.strftime('%Y%m%d%H%M%S',time.localtime(timefloat)) 
 
     return trainName
+
 
 def train(lineModel,trainDataSet,validDataSet,msMg,projectName):
 
@@ -38,19 +31,10 @@ def train(lineModel,trainDataSet,validDataSet,msMg,projectName):
     # 创建 trainName
     trainName = build_trainer_name(startTime)
 
-    # 
-    epochs = modelConfig.epochs
-    step = 0
-    nBatch = _get_maxIter(trainDataSet) # 可以分成多少批次
 
-    totalStep = epochs * nBatch
+    #----------------------------------------------------------------------------
+    # 没有绑定 trainName 之前，发送到公共队列的信息
 
-    #
-    tf.summary.scalar('loss_op', lineModel.loss_op) # histogram、image...
-    tf.summary.scalar("accuracy_op", lineModel.accuracy_op)
-    merged_summary_op = tf.summary.merge_all()
-
-    # 没有绑定 trainName 之前 发送到公共队列的信息
     trainListStaticInfo = {
         "projectName": projectName,
         "trainName":trainName,
@@ -58,6 +42,15 @@ def train(lineModel,trainDataSet,validDataSet,msMg,projectName):
     msMg.push(trainListStaticInfo,"trainListStaticInfo") 
     
     
+    #----------------------------------------------------------------------------
+    
+    
+    epochs = modelConfig.epochs
+    step = 0
+    nBatch = trainDataSet.nBatch # 可以分成多少批次 
+
+    totalStep = epochs * nBatch
+
 
     #----------------------------------------------------------------------------
     # 固定消息：
@@ -98,14 +91,16 @@ def train(lineModel,trainDataSet,validDataSet,msMg,projectName):
     #----------------------------------------------------------------------------
     # 机器信息
 
-    # Popen对象创建后，主程序不会自动等待子进程完成
-    # 什么时间停止子进程？异常时需要主动杀死，因为不会自动关闭
-    pyFile = os.path.abspath(sysinfo.__file__)
-    cmd = "python {pyFile} \"{trainName}\"".format(pyFile=pyFile,trainName=trainName)
-    sysInfoSubprocess = subprocess.Popen(cmd,stdout=subprocess.PIPE,stderr=subprocess.PIPE,shell=True)
+    # Popen对象创建后，主程序不会自动等待子进程完成。什么时间停止子进程？异常时需要主动杀死，因为不会自动关闭
+    sysInfoSubprocess = run_sysinfo_subprocess(trainName)
 
 
     #----------------------------------------------------------------------------
+
+    #
+    tf.summary.scalar('loss_op', lineModel.loss_op) # histogram、image...
+    tf.summary.scalar("accuracy_op", lineModel.accuracy_op)
+    merged_summary_op = tf.summary.merge_all()
 
     tfconfig = tf.ConfigProto(allow_soft_placement=True) # 需要在没有GPU的情况下，转为CPU
     tfconfig.gpu_options.allow_growth = True # 动态申请显存
@@ -117,7 +112,6 @@ def train(lineModel,trainDataSet,validDataSet,msMg,projectName):
             init = tf.global_variables_initializer() # 全局变量初始化
             sess.run(init)
 
-            
             #----------------------------------------------------------------------------
             for epoch_i in range(epochs):
 
@@ -229,7 +223,7 @@ def train(lineModel,trainDataSet,validDataSet,msMg,projectName):
                         msMg.push(trainIterInfoDict,topic="trainIterInfoDict")
 
 
-                    # 模型保存 OK
+                    # 模型保存
                     if step % modelConfig.modelStepSave == 0:
                         sessInfoDict = {
                             "step":step,
@@ -239,7 +233,7 @@ def train(lineModel,trainDataSet,validDataSet,msMg,projectName):
                         # TODO sess 无法序列化 SwigPyObject objects
 
 
-                    # 模型可视化 OK - tensorboard
+                    # 模型可视化 - tensorboard
                     if step % modelConfig.summaryStepSave == 0:
                         if False: # step == 0:
                             g = sess.graph
@@ -268,7 +262,7 @@ def train(lineModel,trainDataSet,validDataSet,msMg,projectName):
                             #----------------------------------------------------------------------------
                             # 计算 validation loss
 
-                            validDataSet.batchSize=validDataSet.sampleNum # TODO 但对大数据量不行，不行就不行，内存装不下怎么样也不行
+                            validDataSet.batchSize=validDataSet.sampleNum # TODO 但对大数据量不行，不行就不行，内存装不下怎么样也不行。keras 是如何做到迭代验证的？
 
                             for outputDict in validDataSet:
                         
@@ -297,13 +291,12 @@ def train(lineModel,trainDataSet,validDataSet,msMg,projectName):
 
                             msMg.push(trainIterInfoDict,topic="trainIterInfoDict")
 
-                            print("正在验证。。。")
-                            print(trainIterInfoDict)
                     # 
                     time.sleep(1)
                     step += 1
                     batch_i += 1
             
+            sysInfoSubprocess.kill() # 在 Windows 上， kill() 是 terminate() 的别名。
 
     except Exception as e:
         print(e)

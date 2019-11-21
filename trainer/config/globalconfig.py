@@ -26,8 +26,5 @@ port = "8075" # 后端app始终都是这个
 proxyPort = "8076" # 这个是前端和nginx代理的端口
 
 
-# # # # 
-# 图片
-
 # DATABASE = "" # 一个 trainName 一个数据库
 

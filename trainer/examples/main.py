@@ -1,5 +1,5 @@
 
-from trainer.core.client import test_train
+from trainer.examples.client import test_train
 
 
 

@@ -7,13 +7,27 @@
 
 """
 
-
+import os
 import pynvml # pip install nvidia-ml-py3
 import psutil 
 import time 
 import argparse
 
 from trainer.core.msmg import MessageManager
+
+
+
+
+def run_sysinfo_subprocess(trainName):
+    """ 在py子进程获取机器信息"""
+    import subprocess
+
+    pyFile = os.path.abspath(__file__)
+    cmd = "python {pyFile} \"{trainName}\"".format(pyFile=pyFile,trainName=trainName)
+    sysInfoSubprocess = subprocess.Popen(cmd,stdout=subprocess.PIPE,stderr=subprocess.PIPE,shell=True)
+
+    return sysInfoSubprocess
+
 
 def get_args():
     parser = argparse.ArgumentParser()

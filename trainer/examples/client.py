@@ -1,8 +1,10 @@
 """客户流程"""
-from .modelconfig import modelConfig 
 
-from .msmg import MessageManager
+
+from trainer import MessageManager
 msMg = MessageManager()
+
+from .modelconfig import modelConfig 
 
 from .buildds import build_dataset
 
@@ -14,7 +16,7 @@ trainDataSet,validDataSet,testDataSet = ds.split_dataset(strategyValidate=2)
 from .model import LineModel
 lineModel = LineModel()
 
-from .bkbkend import train
+from .trains import train
 
 def test_train():
     
