@@ -103,7 +103,10 @@ export default {
 
       plotData.data = [];
 
-      for (let [k, v] of Object.entries(trainDynamicInfoDict)) {
+      let keyArray = Object.keys(trainDynamicInfoDict).sort();
+
+      for (let k of keyArray) {
+        let v = trainDynamicInfoDict[k];
         // TODO step
         if (k != "step") {
           //
@@ -119,7 +122,9 @@ export default {
           itemSeriesObj.data = [];
 
           for (let i in v) {
-            itemSeriesObj.data.push([step[i], v[i]]);
+            if (v[i]) {
+              itemSeriesObj.data.push([step[i], v[i]]);
+            }
           }
 
           //
@@ -146,7 +151,10 @@ export default {
       let step = trainDynamicInfoDict.step;
       let addData = [];
       let idx = 0;
-      for (let [k, v] of Object.entries(trainDynamicInfoDict)) {
+
+      let keyArray = Object.keys(trainDynamicInfoDict).sort();
+      for (let k of keyArray) {
+        let v = trainDynamicInfoDict[k];
         // TODO step
         if (k != "step") {
           let itemSeriesObj = {};
@@ -154,9 +162,12 @@ export default {
           itemSeriesObj.seriesIndex = idx; // 第 k 个序列
           itemSeriesObj.data = [];
           for (let i in v) {
-            itemSeriesObj.data.push([step[i], v[i]]);
+            if (v[i]) {
+              itemSeriesObj.data.push([step[i], v[i]]);
+            }
           }
           addData.push(itemSeriesObj);
+          idx = idx + 1;
         }
       }
       return addData;

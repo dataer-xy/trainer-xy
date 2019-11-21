@@ -300,7 +300,7 @@ def train(lineModel,trainDataSet,validDataSet,msMg,projectName):
                             print("正在验证。。。")
                             print(trainIterInfoDict)
                     # 
-                    time.sleep(1.5)
+                    time.sleep(1)
                     step += 1
                     batch_i += 1
             

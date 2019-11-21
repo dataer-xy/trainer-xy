@@ -16,7 +16,8 @@ def my_pandas_to_dict(df,isOnlyOne=True):
     
     if not isOnlyOne:
         for columnsName in columns:
-            outputDict[columnsName] = df[columnsName].tolist() # np.stack(df[columnsName]) 
+            colList = df[columnsName].tolist()
+            outputDict[columnsName] = [None if x!=x else x for x in colList] # np.stack(df[columnsName]) 
     else:
         for columnsName in columns:
             outputDict[columnsName] = df[columnsName].tolist()[0]
