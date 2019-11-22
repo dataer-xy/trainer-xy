@@ -17,8 +17,9 @@
 * sysinfo 定义成进程或子进程 NO
 * 调试时 mq 主动关闭了连接 https://blog.csdn.net/csdn_am/article/details/79894662
 
+* app 从 trainer 拿到下层，引用很耗时 OK
+
 * 速度-- 包装起来
-* app 从 trainer 拿到下层，引用很耗时
 * output 路径要修改 在 config 中
 
 
@@ -69,6 +70,13 @@
 
 
 
+* TF summary 能否写进一个文件 算了 直接本地 tfb NO 
+* sanic 如何传递 html 文件 OK 
+* 发送的 html 能找到 js 等文件吗？ OK
+* utils 整理
+
+
+
 # 打包
 * 客户端
 * index.html npm run build (vue 如何部署？)
@@ -77,3 +85,8 @@
 * test
 * readme
 
+
+# 
+* loss acc 分开
+* train ds/sys 分开
+* sys 780 子进程自动终止了？

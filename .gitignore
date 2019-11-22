@@ -1,7 +1,10 @@
 
-
+temp
+_temp
 .vscode
 *.db
 
 outputs
 log
+
+*.pypirc

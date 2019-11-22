@@ -27,7 +27,3 @@ def test_train():
 
     print("end")
 
-
-
-
-

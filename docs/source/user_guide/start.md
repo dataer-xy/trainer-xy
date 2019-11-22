@@ -1,3 +1,14 @@
+# 启动 mq 等数据服务进程
+
+* mysqld
+* rabbitmq
+
+# 修改 trainer 配置文件 
+
+在 trainer\core\config.py 中
+
+
+``` python 
 
 import os
 import platform
@@ -31,7 +42,6 @@ class TrainerConfig(ConfigBase):
     def __init__(self):
         self.isLog = True
 
-        # 
         sysstr = platform.system() # Windows/Linux
         # userName = getpass.getuser() # 获取当前用户名
         if sysstr == "Windows":
@@ -46,10 +56,6 @@ class TrainerConfig(ConfigBase):
         #
         self.port = PORT # 后端app始终都是这个
         self.proxyPort = ProxyPort # 这个是前端和nginx代理的端口
-        
-        
 
-# 静态配置量
-trainerConfig = TrainerConfig()
-
+```
 

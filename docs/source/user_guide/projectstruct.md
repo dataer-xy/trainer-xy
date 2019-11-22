@@ -1,8 +1,170 @@
-"""这个地方放 train 函数
+# 项目结构示例
 
-训练模板
+## tensorflow
 
-"""
+
+### 构建数据集
+
+buildds.py 文件
+
+
+``` python
+import numpy as np 
+import pandas as pd
+
+from dataset import DataSet 
+
+def build_dataset():
+    
+    # 
+    nSample = 5000 # 样本数量
+    xData = np.random.rand(2, nSample)
+    wTrue = [0.100, 0.200]
+    bTrue = 0.300
+    
+    pdf = pd.DataFrame()
+    pdf["yTrue"] = np.dot(wTrue, xData) + bTrue
+    pdf["x"] = xData.T.tolist()
+
+    # 
+    ds = DataSet(pdf)
+
+    # 设置
+    ds.batchSize = 64 # 批次大小
+
+    return ds
+```
+
+
+### 构建模型
+
+model.py 文件 
+
+``` python 
+import tensorflow as tf
+import numpy as np
+from .modelconfig import modelConfig
+
+class LineModel(object):
+    def __init__(self):
+
+        self.x = tf.placeholder(dtype=tf.float32,shape=[None,2],name="x")
+        self.yTrue = tf.placeholder(dtype=tf.float32,shape=[None],name="yTrue")
+        # 构造一个线性模型
+        b = tf.Variable(tf.zeros([1]),name="bias")
+        W = tf.Variable(tf.random_uniform([1, 2], -1.0, 1.0),name="weight")
+        yHat = tf.matmul(W, self.x, transpose_b=True) + b
+
+        # 最小化方差
+        self.loss_op = tf.reduce_mean(tf.square(yHat - self.yTrue))
+        self.accuracy_op = 1-tf.reduce_sum(tf.square(yHat - self.yTrue)) / modelConfig.deno # 区别于R2，固定值
+        optimizer = tf.train.AdadeltaOptimizer(modelConfig.learnRate)
+        tf.train
+        self.train_op = optimizer.minimize(self.loss_op)
+
+
+    def try_run(self):
+        """ 运行 """
+        x = np.random.uniform(size=(63,2))
+        yTrue = np.random.uniform(size=(63,))
+
+        with tf.Session() as sess:
+
+            init = tf.global_variables_initializer()
+            sess.run(init)
+
+            feed_dict = {
+                self.x:x,
+                self.yTrue:yTrue
+            }
+
+            a,b = sess.run([self.loss_op,self.accuracy_op],feed_dict=feed_dict)
+            print(a,b)
+```
+
+
+
+### 模型的配置文件
+
+
+modelconfig.py
+
+``` python
+import os
+
+from trainer.utils.pathJoinUtils import my_path_join
+from trainer.utils.dirFileUtils import mkdir_my
+
+from trainer import ModelConfigBase 
+
+#--------------------------------------------------------------------------------
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),os.path.pardir)) # 父级目录
+
+OUTPUT_BASE = my_path_join(BASE_DIR,r"outputs")
+
+checkpointPath = my_path_join(OUTPUT_BASE,r"checkpointPath")
+mkdir_my(checkpointPath)
+
+tensorboardLogPath = my_path_join(OUTPUT_BASE,r"tensorboardLogPath")
+mkdir_my(tensorboardLogPath)
+
+exportPath = my_path_join(OUTPUT_BASE,r"exportPath") # NOTE: 不能存在
+# mkdir_my(exportPath)
+
+historyPath = my_path_join(OUTPUT_BASE,r"historyPath")
+mkdir_my(historyPath)
+
+
+
+class ModelConfig(ModelConfigBase):
+    # NOTE: 注意这里的继承
+
+    def __init__(self):
+        self.learnRate = 0.5 # 学习率
+        self.deno = 12 # 分母
+
+        # 训练部分
+        self.batchSize = 64 # OK
+
+        self.epochs = 100 # epoch 次数 step = epochs*批次数 NOTE: 10 epoch 需要 1/4 天
+
+        self.validFrequency = 2 # ? 个 epoch 验证 1 次
+
+        self.runMetaDataFrequency = None # 多少尺度运行一次 runmetadata
+
+        #---------------------------------------------------
+        # 存储
+
+        self.printStep = 20 # OK
+        self.validStep = 50
+
+        self.summaryStepSave = 20 # 每 20 step 保存一次 summary
+        
+        self.modelStepSave = 1000 # 每 1000 step 保存一次 model
+
+        self.hiddenLayerStepSave = 50 # 每 50 step 保存一次 history
+
+        self.checkpointPath = checkpointPath # NOTE: 需要是一个空文件夹。存储保存路径，保存了graph和网络参数值
+
+        self.checkpointModelName = "linemodel"
+
+        self.tensorboardLogPath = tensorboardLogPath # 可视化的保存路径，按epoch记录 # OK
+
+        self.exportPath = exportPath # save_model 保存模型 # OK
+
+        self.historyPath = historyPath # OK
+    
+
+modelConfig = ModelConfig()
+
+```
+
+
+### 训练程序
+
+trains.py
+
+``` python 
 import os
 import time
 import tensorflow as tf
@@ -88,7 +250,6 @@ def train(lineModel,trainDataSet,validDataSet,msMg,projectName):
     #----------------------------------------------------------------------------
     # 机器信息
 
-    # Popen对象创建后，主程序不会自动等待子进程完成。什么时间停止子进程？异常时需要主动杀死，因为不会自动关闭
     sysInfoSubprocess = run_sysinfo_subprocess(trainName)
 
 
@@ -134,8 +295,7 @@ def train(lineModel,trainDataSet,validDataSet,msMg,projectName):
                         return 0
                     
                     #----------------------------------------------------------------------------
-                    # 训练
-                    # NOTE 尽量保持同名
+                    # 训练 NOTE 尽量保持同名
                     
                     feed_dict = {
                         lineModel.x: outputDict["x"], 
@@ -202,12 +362,6 @@ def train(lineModel,trainDataSet,validDataSet,msMg,projectName):
 
                     # 模型保存
                     if step % modelConfig.modelStepSave == 0:
-                        sessInfoDict = {
-                            "step":step,
-                            "sess":sess
-                        }
-                        # msMg.push(sessInfoDict,topic="sessInfoDict")
-                        # TODO sess 无法序列化 SwigPyObject objects
                         saver.save(
                             sess, 
                             os.path.join(modelConfig.checkpointPath,modelConfig.checkpointModelName), 
@@ -216,16 +370,8 @@ def train(lineModel,trainDataSet,validDataSet,msMg,projectName):
 
                     # 模型可视化 - tensorboard
                     if step % modelConfig.summaryStepSave == 0:
-                        g = None
-                        summaryInfoDict = {
-                            "step":step,
-                            "summaryStr":summaryStr,
-                            "runMetadata":runMetadata,
-                            "graph":g
-                        }
 
-                        # msMg.push(summaryInfoDict,topic="summaryInfoDict")
-                        # TODO Cannot serialize socket object
+
                         summaryWriter.add_summary(summaryStr, global_step=step) # buffer--as str
                         
 
@@ -251,8 +397,6 @@ def train(lineModel,trainDataSet,validDataSet,msMg,projectName):
                                     [lineModel.loss_op, lineModel.accuracy_op], 
                                     feed_dict=feed_dict
                                 )
-                                
-                                # break
                             
                             #----------------------------------------------------------------------------
                             # 信息
@@ -279,4 +423,38 @@ def train(lineModel,trainDataSet,validDataSet,msMg,projectName):
         raise e
     finally:
         sysInfoSubprocess.kill() # 在 Windows 上， kill() 是 terminate() 的别名。
+
+
+```
+
+
+### main
+
+main.py
+
+
+``` python 
+from trainer import MessageManager
+msMg = MessageManager()
+
+from .modelconfig import modelConfig 
+
+from .buildds import build_dataset
+
+ds = build_dataset()
+ds.batchSize = modelConfig.batchSize
+
+trainDataSet,validDataSet,testDataSet = ds.split_dataset(strategyValidate=2)
+
+from .model import LineModel
+lineModel = LineModel()
+
+from .trains import train
+
+
+projectName = "testProj" # NOTE 这里要标记 trainer 的项目名称
+train(lineModel,trainDataSet,validDataSet,msMg,projectName)
+
+```
+
 

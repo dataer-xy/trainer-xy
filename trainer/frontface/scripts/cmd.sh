@@ -10,3 +10,10 @@ cnpm install axios -S
 cnpm install vue-axios -S
 
 cnpm install vue-awesonme-swiper --save
+
+
+
+# 部署
+
+
+

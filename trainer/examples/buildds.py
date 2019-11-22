@@ -23,8 +23,6 @@ def build_dataset():
     # 设置
     ds.batchSize = 64 # 批次大小
 
-  
-
     return ds
 
 

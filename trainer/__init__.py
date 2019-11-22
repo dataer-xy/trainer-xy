@@ -19,6 +19,10 @@ from .core import run_sysinfo_subprocess
 from .core import trainerConfig
 
 
+from .core import is_continue_in_batchState
+from .core import is_continue_in_epochState
+
+
 #------------------------------------------------------
 # utils
 

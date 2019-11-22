@@ -21,11 +21,9 @@ bpIndex = Blueprint(name="bpIndex",url_prefix="/bpIndex")
 @bpIndex.route("/",methods=["GET","POST"])
 def index(request):
     """"""
-    messageJson = request.json
-
-    mainData = messageJson["mainData"]
+    # messageJson = request.json
 
     # TODO
-    indexFile = os.path.join( os.path.abspath( os.path.join(os.path.dirname(os.path.abspath(__file__)),os.pardir,os.pardir)),"static","html")
+    indexFile = os.path.join( os.path.abspath( os.path.join(os.path.dirname(os.path.abspath(__file__)),os.pardir,os.pardir)),"static","index.html")
     
     return response.file(indexFile)

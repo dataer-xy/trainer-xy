@@ -63,6 +63,4 @@ class ModelConfig(ModelConfigBase):
         self.historyPath = historyPath # OK
     
 
-
-
 modelConfig = ModelConfig()
