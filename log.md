@@ -34,7 +34,8 @@
 * train 静态属性增加 tag OK
 * 有些不要的数据，在后端过滤掉 OK
 * ds 等 动态数据没有 step 信息，要在 trainer 中加上 OK
-* 后端的初始化是发送一个 index.html (由前端提供)
+
+* 后端的初始化是发送一个 index.html (由前端提供)??
 
 
 # 前端
@@ -49,10 +50,10 @@
 * 显示 trainer 名称 div OK
 * axios 的用法是否正确，响应可能是 data.data.mainData，如果是的话，修改后端，让后端直接返回数据，不管对错！OK
 * 循环请求应该放到哪里？OK
+* isGetAll 时，echart 要清空 NO
+* key 的顺序会不会有问题 OK
 * 循环请求 trainList
-* isGetAll 时，echart 要清空
 * stop 发送仍然有问题
-* key 的顺序会不会有问题
 
 
 * 删除某个trainer -- 后台管理工具
@@ -60,13 +61,17 @@
 
 # 调试 11-15
 * 不可以改变变量的名称，可以增加字典的键（不需要改写后端），可以增加队列（需要改写后端）
+* stop 只能发送到 batch 
 
 # 结束 11-21
-* 开发任务基本结束
-* 进入收尾阶段
+* 开发任务基本结束 OK
+* 进入收尾阶段 OK
+
+
 
 # 打包
 * 客户端
+* index.html npm run build (vue 如何部署？)
 * pypi
 * doc
 * test

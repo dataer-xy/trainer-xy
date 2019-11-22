@@ -1,9 +1,7 @@
 
-temp
+
 .vscode
 *.db
 
 outputs
 log
-
-# trainer/frontface

@@ -5,7 +5,7 @@ include README.md
 include LICENSE
 include MANIFEST.in
 include DEBUG.md
-include UPDATE_NOTES.md
+include NEWS.md
 include requirements.txt
 
 
