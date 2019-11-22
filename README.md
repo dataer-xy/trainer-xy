@@ -4,3 +4,10 @@
 
 # 
 * pandas 中的 nan 不能很好的 转为 json 传递出去
+
+
+# 
+* mysql
+* rabbitmq
+* [vue]
+

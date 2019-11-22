@@ -1,10 +1,8 @@
-"""这个地方放train 函数
+"""这个地方放 train 函数
 
 训练模板
 
 """
-
-
 import os
 import time
 import tensorflow as tf
@@ -65,7 +63,7 @@ def train(lineModel,trainDataSet,validDataSet,msMg,projectName):
     
     # 
     trainStaticInfoDict = {
-        "projectName": projectName,
+        "projectName":projectName,
         "trainName":trainName,
         "startTime":startTime,
         "totalStep":totalStep,

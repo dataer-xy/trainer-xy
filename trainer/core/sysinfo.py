@@ -16,8 +16,6 @@ import argparse
 from trainer.core.msmg import MessageManager
 
 
-
-
 def run_sysinfo_subprocess(trainName):
     """ 在py子进程获取机器信息"""
     import subprocess
@@ -55,18 +53,21 @@ def main(trainName):
     cpuCount = psutil.cpu_count()
     memoryTotal = psutil.virtual_memory().total/1024/1024/1024 # G
 
-    pynvml.nvmlInit()
-    handle = pynvml.nvmlDeviceGetHandleByIndex(1) # 0 是？ 1 是 1080Ti
-    gpuMemoryTotal = pynvml.nvmlDeviceGetMemoryInfo(handle).total/1024/1024/1024 # G
-    pynvml.nvmlShutdown()
+    try:
+        pynvml.nvmlInit()
+        handle = pynvml.nvmlDeviceGetHandleByIndex(1) # 0 是？ 1 是 1080Ti
+        gpuMemoryTotal = pynvml.nvmlDeviceGetMemoryInfo(handle).total/1024/1024/1024 # G
+        pynvml.nvmlShutdown()
+    except:
+        gpuMemoryTotal = None
 
     sleepTime = 1
     sendTimeStep = 60 # 60 step发送一次结果
 
     sysStaticInfoDict = {
         "cpuCount":cpuCount,
-        "memoryTotal":memoryTotal,
-        "gpuMemoryTotal":gpuMemoryTotal,
+        "memoryTotal":"{memoryTotal} G".format(memoryTotal=memoryTotal),
+        "gpuMemoryTotal":"{gpuMemoryTotal} G".format(gpuMemoryTotal = gpuMemoryTotal),
         "sleepTime":sleepTime,
         "sendTimeStep":sendTimeStep
     }

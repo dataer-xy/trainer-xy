@@ -2,7 +2,9 @@
 import os
 import platform
 from abc import ABCMeta
-import getpass
+# import getpass
+
+#-------------------------------------------------------------
 
 # debug
 DEBUG = False
@@ -14,6 +16,8 @@ ENCODING = "utf-8"
 PORT = "8075"
 
 ProxyPort = "8076"
+
+#-------------------------------------------------------------
 
 class ConfigBase(metaclass=ABCMeta):
     """config 抽象类/基类"""
@@ -32,7 +36,7 @@ class TrainerConfig(ConfigBase):
 
         # 
         sysstr = platform.system() # Windows/Linux
-        userName = getpass.getuser() # 获取当前用户名
+        # userName = getpass.getuser() # 获取当前用户名
         if sysstr == "Windows":
             self.Trainer_APP_DIR = r"D:\.trainer\app"
             

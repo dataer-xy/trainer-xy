@@ -1,0 +1,25 @@
+
+include setup.py
+include setup.cfg
+include README.md
+include LICENSE
+include MANIFEST.in
+include DEBUG.md
+include UPDATE_NOTES.md
+include requirements.txt
+
+
+include TODO.md
+include LOG.md
+
+exclude .pypirc
+
+recursive-include dataset *
+recursive-include docs *
+recursive-include examples *
+recursive-include references * 
+
+recursive-exclude NEW *
+recursive-exclude VERSIONS *
+
+
