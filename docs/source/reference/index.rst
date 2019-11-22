@@ -9,4 +9,7 @@ API Reference
 
     msmg
     mconfbase
+    sysinfo
+    iterutils
     back
+
