@@ -11,5 +11,6 @@ API Reference
     mconfbase
     sysinfo
     iterutils
-    back
+
+.. backend
 

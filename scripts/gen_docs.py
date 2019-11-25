@@ -96,9 +96,9 @@ def gen_pdf(isRebuild=False):
 
 
 def main():
-    isRebuild=False
-    # gen_html(isRebuild)
-    gen_pdf(isRebuild)
+    isRebuild = True
+    gen_html(isRebuild)
+    # gen_pdf(isRebuild)
 
 
 if __name__ == "__main__":

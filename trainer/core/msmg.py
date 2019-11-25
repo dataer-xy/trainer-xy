@@ -3,7 +3,7 @@
 
 import pika
 
-from myutils.systemTypeUtils import use_platform
+from ..utils.systemTypeUtils import use_platform
 
 systype = use_platform()
 if systype == "Windows":
@@ -167,12 +167,27 @@ class MessageManager(object):
         self.trainName = None # NOTE: 声明，为绑定留位置。并不是属性，而是依赖，绑定是为了防止调用时未声明的情况
     
     def band_trainName(self,trainName):
+        """绑定到某个项目/trainName 上
+        
+        Notes
+        -----
+        1、一旦绑定之后，推送/拉取的消息队列（topic）名称都会
+        被修改为 trainName_topic。这有助于识别/区分每个队列是哪个
+        trainName 下的。
+        2、可以统一删除某个 trainName 下的所有队列。
+
+        """
         self.trainName = trainName
 
     def free_trainName(self):
+        """ 释放 trainName
+
+        解除 trainName 的绑定，是 band_trainName 方法的逆变换。
+        
+        """
         self.trainName = None
 
-    def rename_topic(self,topic):
+    def _rename_topic(self,topic):
         if self.trainName:
             topic = "{proj}_{topic}".format(
                 proj=self.trainName,
@@ -182,10 +197,26 @@ class MessageManager(object):
 
 
     def push(self,data,topic):
-        """ 推送 """
+        """ 推送消息/数据到主题/队列中
+
+        Parameters
+        ----------
+        data : py data (任何可序列化的 py 对象)
+            消息即数据
+        topic : str
+            队列即主题
+
+        Notes
+        -----
+        1、如果已经绑定到了某个 trainName 下，消息队列（topic）名称都会
+        被修改为 trainName_topic。
+        2、数据会在该方法中被序列化，拉取的时候也会自动的反序列化，这个
+        过程对用户是不可见的。
+        
+        """
 
         # 管理主题
-        topic = self.rename_topic(topic)
+        topic = self._rename_topic(topic)
 
         # 序列化
         if not isinstance(data,bytes):
@@ -198,13 +229,20 @@ class MessageManager(object):
 
     
     def pull(self,topic):
-        """ 拉取 
+        """ 拉取 -- 一次一条数据
+
+        Parameters
+        ----------
+        topic : str
+            队列即主题
         
-        一次一条数据
+        Notes
+        -----
+        1、拉取的数据会被自动反序列化。
         """
 
         # 管理主题
-        topic = self.rename_topic(topic)
+        topic = self._rename_topic(topic)
 
         # 拉取 
         _,_,dataBytes = self.mqConn.pull(topic)
@@ -214,9 +252,19 @@ class MessageManager(object):
 
         return data
     
-    # 拉取 取尽队列
+
     def pull_deplete(self,topic):
-        """ 拉取 取尽队列 """
+        """ 拉取 -- 取尽队列 
+
+        Parameters
+        ----------
+        topic : str
+            队列即主题
+        
+        Notes
+        -----
+        1、拉取的数据会被自动反序列化。        
+        """
         dataList = []
 
         while True:
@@ -228,51 +276,68 @@ class MessageManager(object):
         
         return dataList
 
+
     def show_all_topic(self):
         print(self.list_queues())
 
 
-    def get_message(self):
-        pass
-
-
     def list_queues(self):
-        """ 列出某虚拟机下所有队列 """
+        """ 列出某虚拟机下所有队列 
+        
+        Notes
+        ------
+        1、仅针对 rabbitmq。
+        2、对于其他的队列，需要修改这个地方。
+        """
         hostName = self.mqConn.virtualHost
 
-        import subprocess
-        cmd = "rabbitmqctl list_queues -p {hostName}".format(hostName=hostName)
-        ret = subprocess.run(
-            cmd,
-            shell=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE
-        )
-        if ret.returncode != 0: 
-            print("公式正则化子程序错误！\n {err}".format(err=ret.stderr.decode(encoding)))
-            queueNameList = []
-        else:
-            returnStr = ret.stdout.decode(encoding)
+        if hostName is not None:
+            import subprocess
+            cmd = "rabbitmqctl list_queues -p {hostName}".format(hostName=hostName)
+            ret = subprocess.run(
+                cmd,
+                shell=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE
+            )
+            if ret.returncode != 0: 
+                print("公式正则化子程序错误！\n {err}".format(err=ret.stderr.decode(encoding)))
+                queueNameList = []
+            else:
+                returnStr = ret.stdout.decode(encoding)
 
-            tempList1 = returnStr.splitlines()[3:]
+                tempList1 = returnStr.splitlines()[3:]
 
-            queueNameList = [itemStr.split()[0] for itemStr in tempList1] # --> list[str]
+                queueNameList = [itemStr.split()[0] for itemStr in tempList1] # --> list[str]
 
-        return queueNameList
+            return queueNameList
 
 
     def delete_queue(self,topic):
-        """删除某个主题/队列"""
+        """删除某个主题/队列
+        
+        Parameters
+        ----------
+        topic : str
+            队列即主题
+        
+        Notes
+        -----
+        1、如果已经绑定到了某个 trainName 下，消息队列（topic）名称都会
+        被修改为 trainName_topic。
+        """
         # 管理主题
-        topic = self.rename_topic(topic)
+        topic = self._rename_topic(topic)
 
         # 删除
         self.mqConn.delete_queue(topic=topic)
 
 
     def clear_trainName(self,trainName=None):
-        """ 清除某train下的所有队列 
+        """ 清除某 train 下的所有队列 
         
+        如果某次训练不理想，可以统一删除该训练下的所有队列
+
         Parameters
         ----------
         trainName : str / None
@@ -289,8 +354,12 @@ class MessageManager(object):
             if queueName.split("_")[0] == trainName:
                 self.mqConn.delete_queue(topic=queueName) 
 
+
     def describe(self):
-        """ MSMG 的信息 """
+        """ MSMG 的信息 
+        
+        用于将 msmg 的信息发送到可视化部分
+        """
 
         msmgInfoDict = {
             "connType":self.connType,
