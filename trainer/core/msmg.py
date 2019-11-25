@@ -3,8 +3,13 @@
 
 import pika
 
-from ..utils.systemTypeUtils import use_platform
+from .config import RbtMQhost
+from .config import RbtMQport
+from .config import RbtMQvirtualHost
+from .config import RbtMQuser
+from .config import RbtMQpassword
 
+from ..utils.systemTypeUtils import use_platform
 systype = use_platform()
 if systype == "Windows":
     encoding = "gbk"
@@ -18,11 +23,11 @@ class MqConn(object):
     可以是继承模式，或者聚合模式
     """
 
-    host = "localhost"
-    port = 5672
-    virtualHost = "testhost"
-    user = "admin"
-    password = "admin"
+    host = RbtMQhost
+    port =RbtMQport
+    virtualHost = RbtMQvirtualHost
+    user = RbtMQuser
+    password = RbtMQpassword
 
     def __init__(self,connType="rabbitmq",**kargs):
         """ 构建工厂 构建不同的 conn"""

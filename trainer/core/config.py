@@ -2,7 +2,6 @@
 import os
 import platform
 from abc import ABCMeta
-# import getpass
 
 #-------------------------------------------------------------
 
@@ -12,10 +11,23 @@ DEBUG = False
 # 文件编码方式
 ENCODING = "utf-8"
 
-# 
+# web
 PORT = "8075"
-
 ProxyPort = "8076"
+
+# sql
+MYSqlHost = '127.0.0.1'
+MYSqlUser = 'root'
+MYSqlPassword = ""
+MYSqlPort = 3306
+
+# mq
+RbtMQhost = "localhost"
+RbtMQport = 5672
+RbtMQvirtualHost = "testhost"
+RbtMQuser = "admin" # 测试用
+RbtMQpassword = "admin"
+
 
 #-------------------------------------------------------------
 
@@ -33,7 +45,6 @@ class TrainerConfig(ConfigBase):
 
         # 
         sysstr = platform.system() # Windows/Linux
-        # userName = getpass.getuser() # 获取当前用户名
         if sysstr == "Windows":
             self.Trainer_APP_DIR = r"D:\.trainer\app"
             

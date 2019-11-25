@@ -81,7 +81,7 @@
 * 客户端
 * index.html npm run build (vue 如何部署？)
 * pypi
-* doc
+* doc OK
 * test
 * readme
 
