@@ -7,19 +7,34 @@ include MANIFEST.in
 include DEBUG.md
 include NEWS.md
 include requirements.txt
-
+include code-style.md 
 
 include TODO.md
 include LOG.md
 
+include trainer/frontface/babel.config.js
+include trainer/frontface/package.json
+include trainer/frontface/README.md 
+include trainer/frontface/code-style.md
+
+
 exclude .pypirc
 
-recursive-include dataset *
-recursive-include docs *
+recursive-include trainer/backend * 
+recursive-include trainer/core * 
+recursive-include trainer/errors * 
+recursive-include trainer/examples * 
+recursive-include trainer/utils * 
+recursive-include trainer/frontface/src *  
+recursive-include trainer/frontface/public * 
+
+recursive-include docs/source *
 recursive-include examples *
 recursive-include references * 
+recursive-include nginx * 
+recursive-include scripts * 
+recursive-include artword * 
 
-recursive-exclude NEW *
-recursive-exclude VERSIONS *
-
+recursive-exclude trainer/frontface/node_modules *
+recursive-exclude trainer/frontface/dist *
 

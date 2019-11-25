@@ -6,5 +6,6 @@ _temp
 
 outputs
 log
-
+dist
 *.pypirc
+*.egg-info

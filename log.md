@@ -80,10 +80,10 @@
 # 打包
 * 客户端
 * index.html npm run build (vue 如何部署？)
-* pypi
+* pypi OK
 * doc OK
 * test
-* readme
+* readme OK
 
 
 # 
