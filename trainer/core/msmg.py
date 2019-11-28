@@ -288,6 +288,8 @@ class MessageManager(object):
 
     def list_queues(self):
         """ 列出某虚拟机下所有队列 
+
+        这个应该放到 MqConn 中
         
         Notes
         ------
