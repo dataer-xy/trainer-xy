@@ -61,7 +61,7 @@ def main(trainName):
     except:
         gpuMemoryTotal = None
 
-    sleepTime = 1
+    sleepTime = 60
     sendTimeStep = 60 # 60 step发送一次结果
 
     sysStaticInfoDict = {
@@ -69,7 +69,7 @@ def main(trainName):
         "memoryTotal":"{memoryTotal} G".format(memoryTotal=memoryTotal),
         "gpuMemoryTotal":"{gpuMemoryTotal} G".format(gpuMemoryTotal = gpuMemoryTotal),
         "sleepTime":sleepTime,
-        "sendTimeStep":sendTimeStep
+        # "sendTimeStep":sendTimeStep
     }
 
     msMg.push(sysStaticInfoDict,topic="sysStaticInfoDict")
@@ -119,18 +119,18 @@ def main(trainName):
         diskReadPercent = (diskRead - oldDiskRead) / sleepTime / 1024 # kb/s 
         
         # 
-        if step % sendTimeStep == 0:
-            sysIterInfoDict = {
-                "step":step,
-                "cpuPercent":cpuPercent,
-                "memoryPercent":memoryPercent,
-                "netRecvPercent":netRecvPercent,
-                "netSendPercent":netSendPercent,
-                "diskWritePercent":diskWritePercent,
-                "diskReadPercent":diskReadPercent
-            }
+        # if step % sendTimeStep == 0:
+        sysIterInfoDict = {
+            "step":step,
+            "cpuPercent":cpuPercent,
+            "memoryPercent":memoryPercent,
+            "netRecvPercent":netRecvPercent,
+            "netSendPercent":netSendPercent,
+            "diskWritePercent":diskWritePercent,
+            "diskReadPercent":diskReadPercent
+        }
 
-            msMg.push(sysIterInfoDict,topic="sysIterInfoDict")
+        msMg.push(sysIterInfoDict,topic="sysIterInfoDict")
 
         time.sleep(sleepTime)
 
