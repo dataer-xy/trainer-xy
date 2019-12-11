@@ -90,3 +90,4 @@
 * loss acc 分开
 * train ds/sys 分开
 * sys 780 子进程自动终止了？
+* 自动扩展前后端
