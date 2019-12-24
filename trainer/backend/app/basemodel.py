@@ -52,6 +52,7 @@ def mq_to_sql(topic,tablename,trainName,isGetAll,isOnlyOne=True):
 
         if len(tdsStaticInfoDictList) > 0:
             _my_dataframe_to_sql(tdsStaticInfoTable,tablename,con=con,engine=engine,if_exists="append")
+            # TODO: 有些数据无法保存！ 未来使用 table 框架来解决这个问题！
 
 
         if isGetAll:

@@ -6,7 +6,6 @@
 import os
 import time
 import tensorflow as tf
-import subprocess
 
 from .modelconfig import modelConfig 
 
@@ -99,8 +98,10 @@ def train(lineModel,trainDataSet,validDataSet,msMg,projectName):
     tf.summary.scalar("accuracy_op", lineModel.accuracy_op)
     merged_summary_op = tf.summary.merge_all()
 
+    # 
     saver = tf.train.Saver(max_to_keep=4) 
 
+    # 
     summaryWriter = tf.summary.FileWriter(modelConfig.tensorboardLogPath)
 
     tfconfig = tf.ConfigProto(allow_soft_placement=True) # 需要在没有GPU的情况下，转为CPU

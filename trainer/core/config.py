@@ -18,7 +18,7 @@ ProxyPort = "8076"
 # sql
 MYSqlHost = '127.0.0.1'
 MYSqlUser = 'root'
-MYSqlPassword = ""
+MYSqlPassword = "19941126acbd////"
 MYSqlPort = 3306
 
 # mq
