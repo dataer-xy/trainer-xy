@@ -3,7 +3,7 @@ pandas==0.23.4
 pika==1.1.0
 ujson==1.35
 sanic==19.3.1
-tensorflow_gpu==1.10.0
+tensorflow_gpu==2.9.3
 dill==0.3.1.1
 Sanic_Cors==0.9.8
 psutil==5.4.7
